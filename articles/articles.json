@@ -1,5 +1,12 @@
 [
     {
+        "id": "multi-agent-researcher",
+        "title": "How I built a Multi-Agent AI Researcher using LangGraph and Streamlit",
+        "date": "2026-03-07",
+        "summary": "Building a reliable multi-agent system means solving hard architectural challenges: preventing infinite loops, passing state between agents, and integrating human-in-the-loop validation.",
+        "readTime": "5 min"
+    },
+    {
         "id": "b2b-data-ecosystem",
         "title": "B2B Data Ecosystems: 20% Infrastructure, 80% Behavioral Economics",
         "date": "2026-03-01",

@@ -45,7 +45,7 @@ This illustrates the direct correlation between the quality of your Pre-Drop cur
 Building and using simulations provides insights that reading a textbook cannot. 
 
 ### 1. Risk-Free Experimentation
-You can see what happens when you spend **&#36;50,000** on influencers but fail to implement bot protection. In the simulation, your product sells out to bots in seconds, your "Brand Health" metric plummets, and your real customers are furious. Learning this in a simulator costs **&#36;0**; learning it in the real world can cost a brand millions.
+You can see what happens when you spend **$50,000** on influencers but fail to implement bot protection. In the simulation, your product sells out to bots in seconds, your "Brand Health" metric plummets, and your real customers are furious. Learning this in a simulator costs **$0**; learning it in the real world can cost a brand millions.
 
 ### 2. Understanding Interdependency
 The simulator forces you to see how **Marketing** (Hype Score) affects **Engineering** (Traffic Volume) which affects **Finance** (Net Profit). In a siloed corporate environment, these departments rarely see their direct impact on each other. Simulation breaks those silos.

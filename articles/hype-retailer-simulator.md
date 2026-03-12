@@ -21,8 +21,8 @@ The operational workflow is built around three distinct phases:
 
 To make the simulation feel real, I moved away from static numbers and toward dynamic, stochastic modeling.
 
-### The Hype Equation ($H$)
-Hype isn't a feeling; in this model, it’s a quantifiable score. The simulator uses an **Aggregate Hype Score** calculated by combining marketing investment, scarcity levels, and a "Curation Intelligence Score" ($I$).
+### The Hype Equation (\(H\))
+Hype isn't a feeling; in this model, it’s a quantifiable score. The simulator uses an **Aggregate Hype Score** calculated by combining marketing investment, scarcity levels, and a "Curation Intelligence Score" (\(I\)).
 
 $$H = \left( \frac{\text{Marketing Budget}}{500} + \frac{2000}{\text{Scarcity}} \right) \times I \times \text{Activity Boosts}$$
 
@@ -40,18 +40,17 @@ This illustrates the direct correlation between the quality of your Pre-Drop cur
 
 ---
 
-## 2. Risk-Free Experimentation
+## 2. Learning Through Simulation: Why It Matters
 
-Building and using simulations provides insights that reading a textbook cannot. You can see what happens when you spend **\$50,000** on influencers but fail to implement bot protection. 
+Building and using simulations provides insights that reading a textbook cannot. 
 
-In the simulation, your product sells out to bots in seconds, your "Brand Health" metric plummets, and your real customers are furious. Learning this in a simulator costs **\$0**; learning it in the real world can cost a brand millions.
+### 1. Risk-Free Experimentation
+You can see what happens when you spend **&#36;50,000** on influencers but fail to implement bot protection. In the simulation, your product sells out to bots in seconds, your "Brand Health" metric plummets, and your real customers are furious. Learning this in a simulator costs **&#36;0**; learning it in the real world can cost a brand millions.
 
-## 3. Understanding Interdependency
-
+### 2. Understanding Interdependency
 The simulator forces you to see how **Marketing** (Hype Score) affects **Engineering** (Traffic Volume) which affects **Finance** (Net Profit). In a siloed corporate environment, these departments rarely see their direct impact on each other. Simulation breaks those silos.
 
-## 4. Algorithmic Domain Mastery
-
+### 3. Algorithmic Domain Mastery
 To build a simulation, you have to define the rules of the domain. You can't just say "Hype matters"—you have to decide *exactly how much* it matters relative to scarcity. This process of "codifying the domain" is the fastest way to become a subject matter expert.
 
 ---

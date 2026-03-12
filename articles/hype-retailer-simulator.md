@@ -1,5 +1,3 @@
-# Engineering "The Drop": Simulating the High-Stakes World of Hype Retail
-
 In the modern digital economy, success for a certain breed of retailer isn't measured in years or months—it's measured in seconds. From limited-edition sneaker releases to "viral" streetwear drops, the **Hype Retail** model has transformed commerce into a high-stakes game of artificial scarcity, algorithmic marketing, and infrastructure-straining traffic surges.
 
 To understand this phenomenon, I built the [**Hype Retailer Workflow Simulator**](https://hype-retailer-simulator-bngud8nqlcbkuj4q8qyuzn.streamlit.app)—a Streamlit-powered engine designed to model the entire lifecycle of a "Drop." Here’s a breakdown of the mechanics, the math, and why simulation is the ultimate tool for domain mastery.

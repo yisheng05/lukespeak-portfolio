@@ -17,40 +17,41 @@ The operational workflow is built around three distinct phases:
 
 ---
 
-## Building the Simulator: The Math of "The Drop"
+## 1. The Math of "The Drop"
 
 To make the simulation feel real, I moved away from static numbers and toward dynamic, stochastic modeling.
 
-### 1. The Hype Equation ($H$)
+### The Hype Equation ($H$)
 Hype isn't a feeling; in this model, it’s a quantifiable score. The simulator uses an **Aggregate Hype Score** calculated by combining marketing investment, scarcity levels, and a "Curation Intelligence Score" ($I$).
 
 $$H = \left( \frac{\text{Marketing Budget}}{500} + \frac{2000}{\text{Scarcity}} \right) \times I \times \text{Activity Boosts}$$
 
 We prioritized **TikTok Velocity** over Instagram aesthetics for intelligence signals because TikTok's "For You" page provides a higher-fidelity signal for **viral discovery**—a key requirement for forecasting demand in 2024.
 
-### 2. Simulating the Traffic Surge
+### Simulating the Traffic Surge
 During "The Drop," traffic isn't a steady stream; it’s a vertical wall. The simulator uses **Stochastic Poisson Modeling** to generate requests. If your waitlist is 1M people, the server needs to handle 5M+ requests in a matter of seconds. 
 
 The simulator also factors in **Edge AI (Anti-Bot Protection)**. High-tier protection (Akamai-style) filters out bot traffic, ensuring units go to "real" humans, which preserves long-term brand health even if it adds infrastructure complexity.
 
-### 3. The Secondary Market Proxy (StockX Prediction)
+### The Secondary Market Proxy (StockX Prediction)
 One of the most exciting features is the **StockX Prediction Model**. It uses a heuristic proxy to predict the resale premium of a product:
 $$\text{Predicted Resale} = \text{Unit Price} \times \left(1.0 + \frac{\text{Hype Score}}{100}\right)$$
 This illustrates the direct correlation between the quality of your Pre-Drop curation and the eventual market desirability.
 
 ---
 
-## Learning Through Simulation: Why It Matters
+## 2. Risk-Free Experimentation
 
-Building and using simulations like this provides insights that reading a textbook cannot. 
+Building and using simulations provides insights that reading a textbook cannot. You can see what happens when you spend **\$50,000** on influencers but fail to implement bot protection. 
 
-### 1. Risk-Free Experimentation
-You can see what happens when you spend \$50,000 on influencers but fail to implement bot protection. In the simulation, your product sells out to bots in seconds, your "Brand Health" metric plummets, and your real customers are furious. Learning this in a simulator costs \$0; learning it in the real world can cost a brand millions.
+In the simulation, your product sells out to bots in seconds, your "Brand Health" metric plummets, and your real customers are furious. Learning this in a simulator costs **\$0**; learning it in the real world can cost a brand millions.
 
-### 2. Understanding Interdependency
+## 3. Understanding Interdependency
+
 The simulator forces you to see how **Marketing** (Hype Score) affects **Engineering** (Traffic Volume) which affects **Finance** (Net Profit). In a siloed corporate environment, these departments rarely see their direct impact on each other. Simulation breaks those silos.
 
-### 3. Algorithmic Domain Mastery
+## 4. Algorithmic Domain Mastery
+
 To build a simulation, you have to define the rules of the domain. You can't just say "Hype matters"—you have to decide *exactly how much* it matters relative to scarcity. This process of "codifying the domain" is the fastest way to become a subject matter expert.
 
 ---

@@ -1,5 +1,12 @@
 [
     {
+        "id": "hype-retailer-simulator",
+        "title": "Engineering \"The Drop\": Simulating the High-Stakes World of Hype Retail",
+        "date": "2026-03-12",
+        "summary": "Building a Streamlit-powered simulator to model the mechanics of 'The Drop'—from TikTok-driven hype equations to stochastic Poisson modeling of traffic surges.",
+        "readTime": "5 min"
+    },
+    {
         "id": "multi-agent-researcher",
         "title": "How I built a Multi-Agent AI Researcher using LangGraph and Streamlit",
         "date": "2026-03-07",

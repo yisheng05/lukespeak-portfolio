@@ -1,5 +1,12 @@
 [
     {
+        "id": "prioritization-in-ai-age",
+        "title": "The Prioritization Paradox: Strategic Guardrails for the Era of Infinite AI Coding",
+        "date": "2026-03-25",
+        "summary": "As AI makes software creation trivial, the bottleneck shifts from building to choosing what to build. We explore the critical need for prioritization and strategic focus in an AI-saturated world.",
+        "readTime": "4 min"
+    },
+    {
         "id": "hype-retailer-simulator",
         "title": "Engineering \"The Drop\": Simulating the High-Stakes World of Hype Retail",
         "date": "2026-03-12",

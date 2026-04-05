@@ -126,6 +126,43 @@
             color: var(--text-primary);
         }
 
+        /* Table Styling */
+        .article-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .article-content th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent-primary);
+            text-align: left;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .article-content td {
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d1d1e0;
+            vertical-align: top;
+        }
+
+        .article-content tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .article-content tr:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
         .article-content a {
             color: var(--accent-primary);
             text-decoration: underline;

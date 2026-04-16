@@ -1,5 +1,12 @@
 [
     {
+        "id": "agent-bottleneck-2026",
+        "title": "The Agent Is the Bottleneck",
+        "date": "2026-04-16",
+        "summary": "Reasoning failure in long-horizon agent tasks isn't gradual — it's abrupt. We explore the Logical Phase Transition, four structural responses reshaping agent architecture, and why the window to build these separations in cheaply is closing.",
+        "readTime": "6 min"
+    },
+    {
         "id": "death-of-vibe-coding-2026",
         "title": "The Death of \"Vibe Coding\": Why Deterministic Agent Runtimes are the New North Star",
         "date": "2026-04-16",

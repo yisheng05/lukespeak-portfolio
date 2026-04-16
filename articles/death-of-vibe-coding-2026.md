@@ -1,7 +1,3 @@
-# The Death of "Vibe Coding": Why Deterministic Agent Runtimes are the New North Star
-
-*Published: April 16, 2026 | Category: AI & Data Engineering*
-
 > The era of stateless, prompt-engineered AI is ending. In its place, we are seeing the rise of stateful agent runtimes that treat memory as a metabolic process and governance as a hardware-level primitive.
 
 ## 1. The Landscape: The Collapse of the Stochastic Gap

@@ -1,5 +1,12 @@
 [
     {
+        "id": "agentic-infrastructure-2026",
+        "title": "From Prompting to Policy: Architecting for the Agentic Era",
+        "date": "2026-04-24",
+        "summary": "The bottleneck has shifted from model reasoning to orchestration overhead. RUBICON cuts the MCP context tax from 76% waste to 9%, Knowledge Capsules supersede RAG, and alignment faking in 7B models demands a hard rethink of where decision authority lives.",
+        "readTime": "6 min"
+    },
+    {
         "id": "governed-agent-systems-2026",
         "title": "The System Is the Strategy: Governing Autonomous Agents in the Post-Scaling Era",
         "date": "2026-04-18",

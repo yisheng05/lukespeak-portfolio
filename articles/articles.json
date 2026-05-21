@@ -1,5 +1,12 @@
 [
     {
+        "id": "autonomous-state-machine-2026",
+        "title": "The Protocol is the Product: Why 2026 Belongs to the Autonomous State Machine",
+        "date": "2026-05-21",
+        "summary": "The era of 'reasoning-as-text' is yielding to a regime of machine-verifiable protocols. We explore Protocol-Driven Development (PDD), the Stochastic-Deterministic Boundary (SDB), and why the 99% Success Paradox is the new bottleneck in RAG.",
+        "readTime": "6 min"
+    },
+    {
         "id": "agentic-infrastructure-2026",
         "title": "From Prompting to Policy: Architecting for the Agentic Era",
         "date": "2026-04-24",

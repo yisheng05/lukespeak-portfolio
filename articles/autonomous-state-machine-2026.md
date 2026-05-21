@@ -6,7 +6,7 @@ The last fourteen days have signaled a violent decoupling from the "chatbot" era
 The release of **Gemini 3.5** serves as the catalyst, marking the transition from probabilistic generation to a paradigm of **Reasoning-as-Action**. For the architect, this means the "chat" interface is no longer the primary design pattern. It is merely a legacy window into a much deeper, more complex agentic stack.
 
 ## 2. From Vibe Coding to PDD (Protocol-Driven Development)
-In my previous writing, I discussed the [Death of Vibe Coding](https://yisheng05.github.io/lukespeak-portfolio/article.html?id=death-of-vibe-coding-2026. We are now seeing its successor: **Protocol-Driven Development (PDD)**. 
+In my previous writing, I discussed the [Death of Vibe Coding](https://yisheng05.github.io/lukespeak-portfolio/article.html?id=death-of-vibe-coding-2026). We are now seeing its successor: **Protocol-Driven Development (PDD)**. 
 
 The core realization of 2026 is that code itself is becoming a transient artifact—generated, executed, and discarded by agents in milliseconds. What remains—the load-bearing structure—is the **Protocol**.
 *   **The SDB (Stochastic-Deterministic Boundary):** This is the critical interface where a probabilistic model (the LLM) proposes an action and a deterministic gate (the runtime) grants privileges based on verified evidence chains.

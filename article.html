@@ -19,8 +19,34 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CPCNFM254Q"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-CPCNFM254Q');
+    </script>
+    </head>
     <!-- Marked.js for Markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
         .article-hero {
@@ -100,6 +126,54 @@
             color: var(--text-primary);
         }
 
+        /* Table Styling */
+        .article-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .article-content th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent-primary);
+            text-align: left;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .article-content td {
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d1d1e0;
+            vertical-align: top;
+        }
+
+        .article-content tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .article-content tr:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .article-content a {
+            color: var(--accent-primary);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            transition: var(--transition-fast);
+        }
+
+        .article-content a:hover {
+            color: var(--accent-secondary);
+        }
+
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -135,7 +209,7 @@
                 <li><a href="index.html#about" class="nav-link">About</a></li>
                 <li><a href="index.html#experience" class="nav-link">Experience</a></li>
                 <li><a href="articles.html" class="nav-link active">Articles</a></li>
-                <li><a href="index.html#contact" class="btn btn-primary btn-sm">Let's Talk</a></li>
+                <li><a href="https://deepresearch-706006852307.asia-southeast1.run.app" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">Deep Research</a></li>
             </ul>
         </nav>
     </header>

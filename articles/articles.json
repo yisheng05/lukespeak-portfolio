@@ -1,5 +1,75 @@
 [
     {
+        "id": "autonomous-state-machine-2026",
+        "title": "The Protocol is the Product: Why 2026 Belongs to the Autonomous State Machine",
+        "date": "2026-05-21",
+        "summary": "The era of 'reasoning-as-text' is yielding to a regime of machine-verifiable protocols. We explore Protocol-Driven Development (PDD), the Stochastic-Deterministic Boundary (SDB), and why the 99% Success Paradox is the new bottleneck in RAG.",
+        "readTime": "6 min"
+    },
+    {
+        "id": "agentic-infrastructure-2026",
+        "title": "From Prompting to Policy: Architecting for the Agentic Era",
+        "date": "2026-04-24",
+        "summary": "The bottleneck has shifted from model reasoning to orchestration overhead. RUBICON cuts the MCP context tax from 76% waste to 9%, Knowledge Capsules supersede RAG, and alignment faking in 7B models demands a hard rethink of where decision authority lives.",
+        "readTime": "6 min"
+    },
+    {
+        "id": "governed-agent-systems-2026",
+        "title": "The System Is the Strategy: Governing Autonomous Agents in the Post-Scaling Era",
+        "date": "2026-04-18",
+        "summary": "The Scaling Wall and the end of the benchmark era are the same inflection point. Agent-Seeds, post-transformer architectures, prolepsis, and reasoning hijacking all point to the same conclusion: model selection is the wrong variable to optimise for in 2026.",
+        "readTime": "7 min"
+    },
+    {
+        "id": "agent-bottleneck-2026",
+        "title": "The Agent Is the Bottleneck",
+        "date": "2026-04-16",
+        "summary": "Reasoning failure in long-horizon agent tasks isn't gradual — it's abrupt. We explore the Logical Phase Transition, four structural responses reshaping agent architecture, and why the window to build these separations in cheaply is closing.",
+        "readTime": "6 min"
+    },
+    {
+        "id": "death-of-vibe-coding-2026",
+        "title": "The Death of \"Vibe Coding\": Why Deterministic Agent Runtimes are the New North Star",
+        "date": "2026-04-16",
+        "summary": "The era of stateless, prompt-engineered AI is ending. We are witnessing the final collapse of vibe coding in favor of deterministic, decidable-by-construction systems.",
+        "readTime": "5 min"
+    },
+    {
+        "id": "edge-ai-landscape-2026",
+        "title": "The Perimeter of Intelligence: Why Edge AI is a Different Beast in 2026",
+        "date": "2026-04-06",
+        "summary": "In the cloud, AI is a resource-hungry giant. At the edge, it’s a survivalist. We explore the 2026 landscape of Edge AI, SLMs, and Physical AI.",
+        "readTime": "5 min"
+    },
+    {
+        "id": "ai-adoption-strategies-2026",
+        "title": "The Great Divergence: Strategies for Successful AI Adoption in 2026",
+        "date": "2026-04-05",
+        "summary": "As AI re-engineers the core DNA of organizations, a gap is forming between those embracing agile 'geek' cultures and traditional 'waterfall' incumbents.",
+        "readTime": "5 min"
+    },
+    {
+        "id": "prioritization-in-ai-age",
+        "title": "The Prioritization Paradox: Strategic Guardrails for the Era of Infinite AI Coding",
+        "date": "2026-03-25",
+        "summary": "As AI makes software creation trivial, the bottleneck shifts from building to choosing what to build. We explore the critical need for prioritization and strategic focus in an AI-saturated world.",
+        "readTime": "4 min"
+    },
+    {
+        "id": "hype-retailer-simulator",
+        "title": "Engineering \"The Drop\": Simulating the High-Stakes World of Hype Retail",
+        "date": "2026-03-12",
+        "summary": "Building a Streamlit-powered simulator to model the mechanics of 'The Drop'—from TikTok-driven hype equations to stochastic Poisson modeling of traffic surges.",
+        "readTime": "5 min"
+    },
+    {
+        "id": "multi-agent-researcher",
+        "title": "How I built a Multi-Agent AI Researcher using LangGraph and Streamlit",
+        "date": "2026-03-07",
+        "summary": "Building a reliable multi-agent system means solving hard architectural challenges: preventing infinite loops, passing state between agents, and integrating human-in-the-loop validation.",
+        "readTime": "5 min"
+    },
+    {
         "id": "b2b-data-ecosystem",
         "title": "B2B Data Ecosystems: 20% Infrastructure, 80% Behavioral Economics",
         "date": "2026-03-01",

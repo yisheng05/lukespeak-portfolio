@@ -142,6 +142,11 @@ const ArticleLoader = {
             // Inject content
             contentEl.innerHTML = htmlContent;
 
+            // 4. Trigger MathJax if available
+            if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+                window.MathJax.typesetPromise([contentEl]).catch((err) => console.log('MathJax typeset failed: ' + err.message));
+            }
+
         } catch (error) {
             console.error('Error loading article:', error);
             titleEl.textContent = 'Error Loading Article';

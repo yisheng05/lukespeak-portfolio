@@ -74,4 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
     revealElements.forEach(el => {
         revealObserver.observe(el);
     });
+
+    // Track clicks on Deep Research buttons
+    const deepResearchLinks = document.querySelectorAll('a[href*="deepresearch-706006852307"]');
+    deepResearchLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (typeof gtag === 'function') {
+                gtag('event', 'click_deep_research', {
+                    'event_category': 'engagement',
+                    'event_label': 'Deep Research Link Click'
+                });
+            }
+        });
+    });
 });

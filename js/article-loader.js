@@ -113,7 +113,7 @@ const ArticleLoader = {
             }
 
             // Update Meta Info
-            document.title = `${articleMeta.title} | Luke Ong`;
+            document.title = `${articleMeta.title} | Lukespeak Engineering Insights`;
             titleEl.innerHTML = articleMeta.title;
             dateEl.innerHTML = `<i class="far fa-calendar"></i> ${this.formatDate(articleMeta.date)}`;
             readTimeEl.innerHTML = `<i class="far fa-clock"></i> ${articleMeta.readTime || '5 min'} read`;
@@ -151,6 +151,50 @@ const ArticleLoader = {
             console.error('Error loading article:', error);
             titleEl.textContent = 'Error Loading Article';
             contentEl.innerHTML = `<p style="color: #ff6b6b;"><i class="fas fa-exclamation-circle"></i> ${error.message}. Please try again later.</p>`;
+        }
+    },
+
+    /**
+     * Load top featured articles for the index.html landing page
+     */
+    loadFeaturedArticles: async function () {
+        const container = document.getElementById('featured-articles-container');
+        if (!container) return;
+
+        try {
+            const response = await fetch(this.config.articlesIndexPath);
+            if (!response.ok) throw new Error('Could not load articles index');
+
+            const articles = await response.json();
+            articles.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Select top 4 showcase articles
+            const featured = articles.slice(0, 4);
+
+            let html = '';
+            featured.forEach((article, index) => {
+                const delay = index * 0.1;
+                html += `
+                    <a href="article.html?id=${article.id}" class="article-card glass-card reveal" style="transition-delay: ${delay}s">
+                        <div class="article-date">
+                            <i class="far fa-calendar-alt"></i> ${this.formatDate(article.date)}
+                            <span style="margin-left: 10px;"><i class="far fa-clock"></i> ${article.readTime || '5 min'} read</span>
+                        </div>
+                        <h3 class="article-title">${article.title}</h3>
+                        <p class="article-summary">${article.summary}</p>
+                        <span class="read-more">Read Architectural Case Study <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            setTimeout(() => {
+                const elements = container.querySelectorAll('.reveal');
+                elements.forEach(el => el.classList.add('active'));
+            }, 100);
+        } catch (error) {
+            console.error('Error loading featured articles:', error);
         }
     }
 };

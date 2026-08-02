@@ -1,5 +1,33 @@
 [
     {
+        "id": "zero-hallucination-auditor",
+        "title": "Zero-Hallucination Cognitive Architectures: Grounding LLMs in Symbolic NIST AI RMF Ontologies",
+        "date": "2026-07-28",
+        "summary": "How we built a deterministic Trust & Safety audit agent using Text Meaning Representation (TMR) and Mental Meaning Representation (MMR) graph logic to prevent LLM hallucinations in highly regulated compliance environments.",
+        "readTime": "7 min"
+    },
+    {
+        "id": "cloudrun-telegram-gemini",
+        "title": "Stateful Cloud Run Webhooks: Building Zero-Hallucination Autonomous Tourism Agents with Hydro-Fill GIS Pipelines",
+        "date": "2026-07-15",
+        "summary": "Architecting an asynchronous, self-learning Telegram bot on Cloud Run. Featuring non-blocking thread handoffs, dynamic OpenStreetMap/OneMap hydro-filling, and faceted knowledge graphs.",
+        "readTime": "8 min"
+    },
+    {
+        "id": "dormant-asset-policy-strategic",
+        "title": "Multi-Agent Regulatory Synthesis: Stateful LangGraph Workflows for Cross-Jurisdiction Compliance",
+        "date": "2026-06-25",
+        "summary": "A deep dive into multi-agent orchestration across banking regulations. Combining parallel domain experts, citation tag linking ([REF-N]), and evidence-backed matrix synthesis in LangGraph.",
+        "readTime": "6 min"
+    },
+    {
+        "id": "vibe-squad",
+        "title": "Real-Time Neighborhood Vibe Analysis: Multi-Agent Geospatial & Social Sentiment Engine",
+        "date": "2026-06-10",
+        "summary": "Synthesizing real-time social sentiment with structured Singapore government GIS APIs. How Firecrawl, OneMap, and Gemini 2.0 Flash collaborate in a LangGraph graph topology.",
+        "readTime": "5 min"
+    },
+    {
         "id": "autonomous-state-machine-2026",
         "title": "The Protocol is the Product: Why 2026 Belongs to the Autonomous State Machine",
         "date": "2026-05-21",
@@ -42,13 +70,6 @@
         "readTime": "5 min"
     },
     {
-        "id": "ai-adoption-strategies-2026",
-        "title": "The Great Divergence: Strategies for Successful AI Adoption in 2026",
-        "date": "2026-04-05",
-        "summary": "As AI re-engineers the core DNA of organizations, a gap is forming between those embracing agile 'geek' cultures and traditional 'waterfall' incumbents.",
-        "readTime": "5 min"
-    },
-    {
         "id": "prioritization-in-ai-age",
         "title": "The Prioritization Paradox: Strategic Guardrails for the Era of Infinite AI Coding",
         "date": "2026-03-25",
@@ -74,20 +95,6 @@
         "title": "B2B Data Ecosystems: 20% Infrastructure, 80% Behavioral Economics",
         "date": "2026-03-01",
         "summary": "Building a B2B data pipeline? If you want partners to submit clean data, you have to build reciprocal incentives into the protocol itself.",
-        "readTime": "4 min"
-    },
-    {
-        "id": "ai-driven-product-innovation",
-        "title": "Piloting AI Innovation in the Public Sector: From Hypothesis to 5,000 MAUs",
-        "date": "2025-12-01",
-        "summary": "A deep dive into how we established cross-industry consensus and launched a full-stack AI chatbot at the Singapore Tourism Board that handled over 10,000 conversations.",
-        "readTime": "6 min"
-    },
-    {
-        "id": "data-to-product-management",
-        "title": "From Data Analyst to Product Leader: Automating 50 Days of Ops",
-        "date": "2023-08-20",
-        "summary": "How leveraging Python, Airflow, and Superset to solve immediate operational bottlenecks naturally paved the path toward formal product management strategies.",
         "readTime": "4 min"
     }
 ]

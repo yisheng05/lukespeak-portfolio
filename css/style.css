@@ -190,10 +190,23 @@ a {
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: 1px;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
 }
 
 .logo span {
     color: var(--accent-primary);
+}
+
+.logo-sub {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+    display: block;
+    font-weight: 600;
+    margin-top: 2px;
 }
 
 .nav-links {

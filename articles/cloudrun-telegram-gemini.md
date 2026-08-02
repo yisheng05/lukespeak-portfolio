@@ -168,4 +168,3 @@ curl -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook" \
 
 ---
 
-*Explore the full containerized source code and deployment scripts on [GitHub](https://github.com/lukeong7/cloudrun-telegram-gemini).*

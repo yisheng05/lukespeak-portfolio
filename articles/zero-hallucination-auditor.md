@@ -125,4 +125,3 @@ Because the evaluation runs in Python graph logic, **the LLM cannot hallucinate 
 
 ---
 
-*Explore the complete source code and ontology schemas on [GitHub](https://github.com/lukeong7/zero-hallucination-auditor).*

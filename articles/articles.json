@@ -35,6 +35,13 @@
         "readTime": "6 min"
     },
     {
+        "id": "ai-adoption-strategies-2026",
+        "title": "The Geek vs. The Waterfall: Strategic AI Adoption in 2026",
+        "date": "2026-05-05",
+        "summary": "Exploring successful AI adoption strategies: Agile execution, combating 'work slop', managing autonomous agents, and preserving the entry-level apprenticeship ladder.",
+        "readTime": "5 min"
+    },
+    {
         "id": "agentic-infrastructure-2026",
         "title": "From Prompting to Policy: Architecting for the Agentic Era",
         "date": "2026-04-24",
@@ -77,6 +84,13 @@
         "readTime": "4 min"
     },
     {
+        "id": "ai-driven-product-innovation",
+        "title": "Piloting AI-Driven Product Innovation: A Full-Stack Tourism Chatbot Case Study",
+        "date": "2026-03-20",
+        "summary": "How we overcame organizational inertia to design, align, and pilot a serverless full-stack AI tourism assistant at STB, scaling to 5,000+ monthly active users.",
+        "readTime": "4 min"
+    },
+    {
         "id": "hype-retailer-simulator",
         "title": "Engineering \"The Drop\": Simulating the High-Stakes World of Hype Retail",
         "date": "2026-03-12",
@@ -95,6 +109,13 @@
         "title": "B2B Data Ecosystems: 20% Infrastructure, 80% Behavioral Economics",
         "date": "2026-03-01",
         "summary": "Building a B2B data pipeline? If you want partners to submit clean data, you have to build reciprocal incentives into the protocol itself.",
+        "readTime": "4 min"
+    },
+    {
+        "id": "data-to-product-management",
+        "title": "From Queries to Strategy: Transitioning from Data Analytics to Product Management",
+        "date": "2026-02-15",
+        "summary": "How building an automated internal operations dashboard at Janio Asia shifted my career from interpreting data to building data products that alter business outcomes.",
         "readTime": "4 min"
     }
 ]

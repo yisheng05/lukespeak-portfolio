@@ -1,3 +1,5 @@
+# From Queries to Strategy: Transitioning from Data Analytics to Product Management
+
 My career didn't begin with a formal Product Management title; it began with data, operations, and the urgent need to solve immediate business bottlenecks. This transition—from executing queries to executing product strategy—was completely organic.
 
 ## The Context: A Startup Scaling Fast

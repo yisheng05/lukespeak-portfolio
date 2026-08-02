@@ -161,4 +161,3 @@ if map_data["last_active_drawing"]:
 
 ---
 
-*Explore the full source code on [GitHub](https://github.com/lukeong7/vibe-squad).*

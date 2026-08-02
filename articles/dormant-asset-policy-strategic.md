@@ -135,4 +135,3 @@ The system dynamically constructs a comparative policy matrix across jurisdictio
 
 ---
 
-*Explore the complete source code and LangGraph workflows on [GitHub](https://github.com/lukeong7/dormant-asset-policy-strategic).*

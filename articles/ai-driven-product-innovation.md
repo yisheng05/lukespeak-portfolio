@@ -1,3 +1,5 @@
+# Piloting AI-Driven Product Innovation: A Full-Stack Tourism Chatbot Case Study
+
 The transition from identifying an emerging technology to successfully deploying it within a complex governmental or enterprise organization is notoriously difficult. Often, the barrier isn't the technology itself, but the lack of alignment, education bottlenecks, and the sheer inertia of existing processes. 
 
 During my tenure at the **Singapore Tourism Board (STB)**, I faced this exact challenge regarding the adoption of AI/ML.

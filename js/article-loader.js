@@ -18,6 +18,153 @@ const ArticleLoader = {
         return new Date(dateString).toLocaleDateString(undefined, options);
     },
 
+    // In-memory state for filtering
+    state: {
+        articles: [],
+        currentCategory: 'all',
+        searchQuery: ''
+    },
+
+    /**
+     * Determine if an article matches a category tag
+     */
+    matchesCategory: function (article, category) {
+        if (category === 'all') return true;
+        
+        const title = (article.title || '').toLowerCase();
+        const summary = (article.summary || '').toLowerCase();
+        const id = (article.id || '').toLowerCase();
+        const combined = `${id} ${title} ${summary}`;
+        
+        if (category === 'agents') {
+            return combined.includes('agent') || 
+                   combined.includes('langgraph') || 
+                   combined.includes('orchestration') || 
+                   combined.includes('chain') || 
+                   combined.includes('infrastructure') || 
+                   combined.includes('bottleneck');
+        }
+        if (category === 'safety') {
+            return combined.includes('hallucination') || 
+                   combined.includes('safety') || 
+                   combined.includes('trust') || 
+                   combined.includes('nist') || 
+                   combined.includes('govern') || 
+                   combined.includes('cognitive') || 
+                   combined.includes('runtime') || 
+                   combined.includes('protocol') || 
+                   combined.includes('state machine') || 
+                   combined.includes('vibe coding');
+        }
+        if (category === 'geospatial') {
+            return combined.includes('gis') || 
+                   combined.includes('onemap') || 
+                   combined.includes('map') || 
+                   combined.includes('geospatial') || 
+                   combined.includes('telegram') || 
+                   combined.includes('webhook') || 
+                   combined.includes('hydro') || 
+                   combined.includes('fill');
+        }
+        if (category === 'product') {
+            return combined.includes('product') || 
+                   combined.includes('prioritization') || 
+                   combined.includes('strategy') || 
+                   combined.includes('drop') || 
+                   combined.includes('retail') || 
+                   combined.includes('ecosystem') || 
+                   combined.includes('data') || 
+                   combined.includes('analytics');
+        }
+        return false;
+    },
+
+    /**
+     * Render the article cards HTML
+     */
+    renderArticleList: function (articles) {
+        const container = document.getElementById('articles-container');
+        if (!container) return;
+        
+        let html = '';
+        
+        if (articles.length === 0) {
+            html = '<div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;"><p><i class="fas fa-search" style="font-size: 2rem; color: var(--accent-primary); margin-bottom: 1rem;"></i><br>No articles match your search criteria.</p></div>';
+        } else {
+            articles.forEach((article, index) => {
+                const delay = index * 0.05; // faster stagger for filtering
+                html += `
+                    <a href="article.html?id=${article.id}" class="article-card glass-card reveal active" style="transition-delay: ${delay}s">
+                        <div class="article-date">
+                            <i class="far fa-calendar-alt"></i> ${this.formatDate(article.date)}
+                            <span style="margin-left: 10px;"><i class="far fa-clock"></i> ${article.readTime || '5 min'} read</span>
+                        </div>
+                        <h2 class="article-title">${article.title}</h2>
+                        <p class="article-summary">${article.summary}</p>
+                        <span class="read-more">Read Full Article <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                `;
+            });
+        }
+        
+        container.innerHTML = html;
+        
+        // Stagger reveal trigger
+        setTimeout(() => {
+            const elements = container.querySelectorAll('.reveal');
+            elements.forEach(el => el.classList.add('active'));
+        }, 50);
+    },
+
+    /**
+     * Apply active search and category filters
+     */
+    applyFilters: function () {
+        const query = this.state.searchQuery.toLowerCase().trim();
+        const category = this.state.currentCategory;
+        
+        const filtered = this.state.articles.filter(article => {
+            // Category check
+            const matchesCat = this.matchesCategory(article, category);
+            
+            // Search query check
+            const title = (article.title || '').toLowerCase();
+            const summary = (article.summary || '').toLowerCase();
+            const matchesSearch = query === '' || title.includes(query) || summary.includes(query);
+            
+            return matchesCat && matchesSearch;
+        });
+        
+        this.renderArticleList(filtered);
+    },
+
+    /**
+     * Setup event listeners for the search and category filters
+     */
+    setupSearchAndFilter: function () {
+        const searchInput = document.getElementById('article-search');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                this.state.searchQuery = e.target.value;
+                this.applyFilters();
+            });
+        }
+        
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Update active button styling
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Update category and apply filters
+                this.state.currentCategory = btn.getAttribute('data-category');
+                this.applyFilters();
+            });
+        });
+    },
+
     /**
      * Load the list of articles for the articles.html page
      */
@@ -40,39 +187,17 @@ const ArticleLoader = {
             // Sort by date (newest first)
             articles.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-            // Generate HTML
-            let html = '';
+            // Save to state for clientside filtering
+            this.state.articles = articles;
 
-            if (articles.length === 0) {
-                html = '<div class="glass-card" style="grid-column: 1 / -1; text-align: center;"><p>More articles coming soon!</p></div>';
-            } else {
-                articles.forEach((article, index) => {
-                    // Add staggered animation delay
-                    const delay = index * 0.1;
-
-                    html += `
-                        <a href="article.html?id=${article.id}" class="article-card glass-card reveal" style="transition-delay: ${delay}s">
-                            <div class="article-date">
-                                <i class="far fa-calendar-alt"></i> ${this.formatDate(article.date)}
-                                <span style="margin-left: 10px;"><i class="far fa-clock"></i> ${article.readTime || '5 min'} read</span>
-                            </div>
-                            <h2 class="article-title">${article.title}</h2>
-                            <p class="article-summary">${article.summary}</p>
-                            <span class="read-more">Read Full Article <i class="fas fa-arrow-right"></i></span>
-                        </a>
-                    `;
-                });
-            }
-
-            // Hide loading, show content
+            // Hide loading
             loading.style.display = 'none';
-            container.innerHTML = html;
-
-            // Trigger animation for newly added elements
-            setTimeout(() => {
-                const elements = container.querySelectorAll('.reveal');
-                elements.forEach(el => el.classList.add('active'));
-            }, 100);
+            
+            // Render first load
+            this.renderArticleList(articles);
+            
+            // Setup listeners
+            this.setupSearchAndFilter();
 
         } catch (error) {
             console.error('Error loading articles:', error);
@@ -137,10 +262,29 @@ const ArticleLoader = {
                 breaks: true
             });
 
-            const htmlContent = marked.parse(markdownContent);
+            // Strip leading # H1 heading if present — the hero section already
+            // shows the title via <h1 id="article-title">, so rendering it again
+            // from the markdown would produce a duplicate heading.
+            const strippedContent = markdownContent.replace(/^# .+\n?/, '');
+
+            const htmlContent = marked.parse(strippedContent);
 
             // Inject content
             contentEl.innerHTML = htmlContent;
+
+            // Wrap tables in responsive div
+            const tables = contentEl.querySelectorAll('table');
+            tables.forEach(table => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'table-wrapper';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            });
+
+            // Trigger PrismJS highlighting
+            if (typeof Prism !== 'undefined') {
+                Prism.highlightAllUnder(contentEl);
+            }
 
             // 4. Trigger MathJax if available
             if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {

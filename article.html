@@ -4,7 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Article | Luke Ong</title>
+    <title>Lukespeak Engineering Insights | AI Architectures & Systems Showcase</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Lukespeak Engineering Insights - Sharing production-grade AI agent architectures, zero-hallucination cognitive runtimes, and FastMCP protocol engineering with the international developer community.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://yisheng05.github.io/lukespeak-portfolio/article.html">
+    <meta property="og:title" content="Lukespeak Engineering Insights | AI Architectures & Systems Showcase">
+    <meta property="og:description" content="Sharing production-grade AI agent architectures, zero-hallucination cognitive runtimes, and FastMCP protocol engineering with the international developer community.">
+    <meta property="og:image" content="https://yisheng05.github.io/lukespeak-portfolio/screenshot.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yisheng05.github.io/lukespeak-portfolio/article.html">
+    <meta property="twitter:title" content="Lukespeak Engineering Insights | AI Architectures & Systems Showcase">
+    <meta property="twitter:description" content="Sharing production-grade AI agent architectures, zero-hallucination cognitive runtimes, and FastMCP protocol engineering with the international developer community.">
+    <meta property="twitter:image" content="https://yisheng05.github.io/lukespeak-portfolio/screenshot.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,9 +48,15 @@
 
       gtag('config', 'G-CPCNFM254Q');
     </script>
-    </head>
     <!-- Marked.js for Markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- PrismJS for syntax highlighting (Tomorrow Night theme) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 
     <!-- MathJax for LaTeX rendering -->
     <script>
@@ -237,18 +263,38 @@
 
     <!-- Footer -->
     <footer id="contact" class="glass-footer">
-        <div class="container footer-content" style="text-align: center; display: block;">
-            <h3 class="footer-logo">LUKE<span>SPEAK</span> <small style="font-size: 0.6em; color: var(--accent-primary);">ENGINEERING INSIGHTS</small></h3>
-            <p>A technical publication sharing open AI architectures, zero-hallucination agent runtimes, and FastMCP engineering.</p>
-            <div class="social-links" style="justify-content: center;">
-                <a href="https://github.com/lukeong7" target="_blank" class="social-icon">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="https://www.linkedin.com/in/lukeong7" target="_blank" class="social-icon">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
+        <div class="container footer-content">
+            <div class="footer-info">
+                <h3 class="footer-logo">LUKE<span>SPEAK</span> <small style="font-size: 0.6em; color: var(--accent-primary);">ENGINEERING INSIGHTS</small></h3>
+                <p>A technical publication sharing open AI architectures, zero-hallucination agent runtimes, and FastMCP engineering.</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/lukeong7" target="_blank" aria-label="LinkedIn"
+                        class="social-icon">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="mailto:yisheng.ong@gmail.com" aria-label="Email" class="social-icon">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
             </div>
-            <p style="margin-top: 2rem;">&copy; <span id="currentYear"></span> Lukespeak Engineering Insights. Built for the developer community.</p>
+
+            <div class="footer-links">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html#paradigms">Architectures</a></li>
+                    <li><a href="index.html#featured">Featured Insights</a></li>
+                    <li><a href="articles.html">All Articles</a></li>
+                    <li><a href="https://deepresearch-706006852307.asia-southeast1.run.app" target="_blank">Deep Research</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact">
+                <h4>Get In Touch</h4>
+                <p><i class="fas fa-envelope"></i> yisheng.ong@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom container">
+            <p>&copy; <span id="currentYear"></span> Lukespeak Engineering Insights. Built for the developer community.</p>
         </div>
     </footer>
 

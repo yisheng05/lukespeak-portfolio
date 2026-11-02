@@ -4,118 +4,135 @@
         "title": "Zero-Hallucination Cognitive Architectures: Grounding LLMs in Symbolic NIST AI RMF Ontologies",
         "date": "2026-07-28",
         "summary": "How we built a deterministic Trust & Safety audit agent using Text Meaning Representation (TMR) and Mental Meaning Representation (MMR) graph logic to prevent LLM hallucinations in highly regulated compliance environments.",
-        "readTime": "7 min"
+        "readTime": "7 min",
+        "tags": ["case-study", "agents", "safety"]
     },
     {
         "id": "cloudrun-telegram-gemini",
         "title": "Stateful Cloud Run Webhooks: Building Zero-Hallucination Autonomous Tourism Agents with Hydro-Fill GIS Pipelines",
         "date": "2026-07-15",
         "summary": "Architecting an asynchronous, self-learning Telegram bot on Cloud Run. Featuring non-blocking thread handoffs, dynamic OpenStreetMap/OneMap hydro-filling, and faceted knowledge graphs.",
-        "readTime": "8 min"
+        "readTime": "8 min",
+        "tags": ["case-study", "agents", "geospatial"]
     },
     {
         "id": "dormant-asset-policy-strategic",
         "title": "Multi-Agent Regulatory Synthesis: Stateful LangGraph Workflows for Cross-Jurisdiction Compliance",
         "date": "2026-06-25",
         "summary": "A deep dive into multi-agent orchestration across banking regulations. Combining parallel domain experts, citation tag linking ([REF-N]), and evidence-backed matrix synthesis in LangGraph.",
-        "readTime": "6 min"
+        "readTime": "6 min",
+        "tags": ["case-study", "agents", "safety"]
     },
     {
         "id": "vibe-squad",
         "title": "Real-Time Neighborhood Vibe Analysis: Multi-Agent Geospatial & Social Sentiment Engine",
         "date": "2026-06-10",
         "summary": "Synthesizing real-time social sentiment with structured Singapore government GIS APIs. How Firecrawl, OneMap, and Gemini 2.0 Flash collaborate in a LangGraph graph topology.",
-        "readTime": "5 min"
+        "readTime": "5 min",
+        "tags": ["case-study", "agents", "geospatial"]
     },
     {
         "id": "autonomous-state-machine-2026",
         "title": "The Protocol is the Product: Why 2026 Belongs to the Autonomous State Machine",
         "date": "2026-05-21",
         "summary": "The era of 'reasoning-as-text' is yielding to a regime of machine-verifiable protocols. We explore Protocol-Driven Development (PDD), the Stochastic-Deterministic Boundary (SDB), and why the 99% Success Paradox is the new bottleneck in RAG.",
-        "readTime": "6 min"
+        "readTime": "6 min",
+        "tags": ["agents", "safety"]
     },
     {
         "id": "ai-adoption-strategies-2026",
         "title": "The Geek vs. The Waterfall: Strategic AI Adoption in 2026",
         "date": "2026-05-05",
         "summary": "Exploring successful AI adoption strategies: Agile execution, combating 'work slop', managing autonomous agents, and preserving the entry-level apprenticeship ladder.",
-        "readTime": "5 min"
+        "readTime": "5 min",
+        "tags": ["strategy"]
     },
     {
         "id": "agentic-infrastructure-2026",
         "title": "From Prompting to Policy: Architecting for the Agentic Era",
         "date": "2026-04-24",
         "summary": "The bottleneck has shifted from model reasoning to orchestration overhead. RUBICON cuts the MCP context tax from 76% waste to 9%, Knowledge Capsules supersede RAG, and alignment faking in 7B models demands a hard rethink of where decision authority lives.",
-        "readTime": "6 min"
+        "readTime": "6 min",
+        "tags": ["agents", "safety"]
     },
     {
         "id": "governed-agent-systems-2026",
         "title": "The System Is the Strategy: Governing Autonomous Agents in the Post-Scaling Era",
         "date": "2026-04-18",
         "summary": "The Scaling Wall and the end of the benchmark era are the same inflection point. Agent-Seeds, post-transformer architectures, prolepsis, and reasoning hijacking all point to the same conclusion: model selection is the wrong variable to optimise for in 2026.",
-        "readTime": "7 min"
+        "readTime": "7 min",
+        "tags": ["agents", "safety"]
     },
     {
         "id": "agent-bottleneck-2026",
         "title": "The Agent Is the Bottleneck",
         "date": "2026-04-16",
         "summary": "Reasoning failure in long-horizon agent tasks isn't gradual — it's abrupt. We explore the Logical Phase Transition, four structural responses reshaping agent architecture, and why the window to build these separations in cheaply is closing.",
-        "readTime": "6 min"
+        "readTime": "6 min",
+        "tags": ["agents"]
     },
     {
         "id": "death-of-vibe-coding-2026",
         "title": "The Death of \"Vibe Coding\": Why Deterministic Agent Runtimes are the New North Star",
         "date": "2026-04-16",
         "summary": "The era of stateless, prompt-engineered AI is ending. We are witnessing the final collapse of vibe coding in favor of deterministic, decidable-by-construction systems.",
-        "readTime": "5 min"
+        "readTime": "5 min",
+        "tags": ["agents", "safety"]
     },
     {
         "id": "edge-ai-landscape-2026",
         "title": "The Perimeter of Intelligence: Why Edge AI is a Different Beast in 2026",
         "date": "2026-04-06",
         "summary": "In the cloud, AI is a resource-hungry giant. At the edge, it’s a survivalist. We explore the 2026 landscape of Edge AI, SLMs, and Physical AI.",
-        "readTime": "5 min"
+        "readTime": "5 min",
+        "tags": ["strategy"]
     },
     {
         "id": "prioritization-in-ai-age",
         "title": "The Prioritization Paradox: Strategic Guardrails for the Era of Infinite AI Coding",
         "date": "2026-03-25",
         "summary": "As AI makes software creation trivial, the bottleneck shifts from building to choosing what to build. We explore the critical need for prioritization and strategic focus in an AI-saturated world.",
-        "readTime": "4 min"
+        "readTime": "4 min",
+        "tags": ["strategy", "product"]
     },
     {
         "id": "ai-driven-product-innovation",
         "title": "Piloting AI-Driven Product Innovation: A Full-Stack Tourism Chatbot Case Study",
         "date": "2026-03-20",
         "summary": "How we overcame organizational inertia to design, align, and pilot a serverless full-stack AI tourism assistant at STB, scaling to 5,000+ monthly active users.",
-        "readTime": "4 min"
+        "readTime": "4 min",
+        "tags": ["case-study", "product"]
     },
     {
         "id": "hype-retailer-simulator",
         "title": "Engineering \"The Drop\": Simulating the High-Stakes World of Hype Retail",
         "date": "2026-03-12",
         "summary": "Building a Streamlit-powered simulator to model the mechanics of 'The Drop'—from TikTok-driven hype equations to stochastic Poisson modeling of traffic surges.",
-        "readTime": "5 min"
+        "readTime": "5 min",
+        "tags": ["case-study", "product"]
     },
     {
         "id": "multi-agent-researcher",
         "title": "How I built a Multi-Agent AI Researcher using LangGraph and Streamlit",
         "date": "2026-03-07",
         "summary": "Building a reliable multi-agent system means solving hard architectural challenges: preventing infinite loops, passing state between agents, and integrating human-in-the-loop validation.",
-        "readTime": "5 min"
+        "readTime": "5 min",
+        "tags": ["case-study", "agents"]
     },
     {
         "id": "b2b-data-ecosystem",
         "title": "B2B Data Ecosystems: 20% Infrastructure, 80% Behavioral Economics",
         "date": "2026-03-01",
         "summary": "Building a B2B data pipeline? If you want partners to submit clean data, you have to build reciprocal incentives into the protocol itself.",
-        "readTime": "4 min"
+        "readTime": "4 min",
+        "tags": ["product"]
     },
     {
         "id": "data-to-product-management",
         "title": "From Queries to Strategy: Transitioning from Data Analytics to Product Management",
         "date": "2026-02-15",
         "summary": "How building an automated internal operations dashboard at Janio Asia shifted my career from interpreting data to building data products that alter business outcomes.",
-        "readTime": "4 min"
+        "readTime": "4 min",
+        "tags": ["product"]
     }
 ]

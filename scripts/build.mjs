@@ -3,11 +3,12 @@
  *
  * Renders every article in articles/articles.json to its own HTML page at
  * articles/<id>.html (with per-article <title>, description, Open Graph,
- * Twitter, canonical and JSON-LD metadata), writes sitemap.xml and feed.xml,
- * and copies the static site into _site/ for GitHub Pages.
+ * Twitter, canonical and JSON-LD metadata), writes the full-text search index,
+ * sitemap.xml and feed.xml, and copies the static site into _site/ for GitHub
+ * Pages.
  *
- * The build fails if articles.json and the Markdown files disagree, so a
- * broken article can never be deployed.
+ * The build fails if articles.json, tags.json and the Markdown files disagree,
+ * so a broken article can never be deployed.
  *
  * Usage: npm run build
  */
@@ -28,7 +29,7 @@ const ARTICLES_DIR = path.join(ROOT, 'articles');
 // Files and folders copied verbatim into the published site.
 const STATIC_ENTRIES = [
     'index.html', 'articles.html', 'article.html', 'favicon.svg', 'og-image.png',
-    'css', 'js', 'articles/articles.json',
+    'css', 'js', 'articles/articles.json', 'articles/tags.json',
 ];
 
 // ---------------------------------------------------------------- helpers
@@ -88,9 +89,48 @@ function renderMarkdown(markdown) {
         .replace(/<\/table>/g, '</table></div>');
 }
 
+const decodeEntities = (s) => s.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi, (m, e) => {
+    const named = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
+    if (e[0] !== '#') return named[e.toLowerCase()];
+    const code = e[1].toLowerCase() === 'x' ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10);
+    return String.fromCodePoint(code);
+});
+
+/**
+ * Plain prose for full-text search: code blocks and LaTeX are dropped because
+ * they make poor result snippets; inline code and everything else is kept.
+ */
+function toSearchText(html) {
+    const text = decodeEntities(html.replace(/<pre[\s\S]*?<\/pre>/g, ' ').replace(/<[^>]+>/g, ' '));
+    return text
+        .replace(/\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\]|\$\$[\s\S]+?\$\$/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
 // ---------------------------------------------------------------- validation
 
-function loadArticles() {
+function loadTags() {
+    let tags;
+    try {
+        tags = JSON.parse(fs.readFileSync(path.join(ARTICLES_DIR, 'tags.json'), 'utf8'));
+    } catch (err) {
+        throw new Error(`articles/tags.json could not be parsed: ${err.message}`);
+    }
+    const errors = [];
+    if (!Array.isArray(tags) || !tags.length) throw new Error('articles/tags.json must be a non-empty JSON array');
+    const ids = new Set();
+    tags.forEach((t, i) => {
+        if (!t || typeof t.id !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(t.id)) errors.push(`tags.json[${i}]: id must be lowercase-kebab-case`);
+        else if (ids.has(t.id)) errors.push(`tags.json[${i}]: duplicate id "${t.id}"`);
+        else ids.add(t.id);
+        if (!t || typeof t.label !== 'string' || !t.label.trim()) errors.push(`tags.json[${i}]: missing "label"`);
+    });
+    if (errors.length) throw new Error(`Tag list is invalid:\n  - ${errors.join('\n  - ')}`);
+    return tags;
+}
+
+function loadArticles(tagIds) {
     const errors = [];
     const indexPath = path.join(ARTICLES_DIR, 'articles.json');
     let articles;
@@ -119,6 +159,13 @@ function loadArticles() {
                 errors.push(`${where}: date "${a.date}" is not a valid YYYY-MM-DD date`);
             }
         }
+        if (!Array.isArray(a.tags) || !a.tags.length) {
+            errors.push(`${where}: "tags" must be a non-empty array of ids from articles/tags.json`);
+        } else {
+            const unknown = a.tags.filter((t) => !tagIds.has(t));
+            if (unknown.length) errors.push(`${where}: unknown tag(s) ${unknown.map((t) => `"${t}"`).join(', ')}; add them to articles/tags.json first`);
+            if (new Set(a.tags).size !== a.tags.length) errors.push(`${where}: duplicate tags`);
+        }
     });
 
     for (const file of fs.readdirSync(ARTICLES_DIR).filter((f) => f.endsWith('.md'))) {
@@ -133,9 +180,8 @@ function loadArticles() {
 
 // ---------------------------------------------------------------- outputs
 
-function buildArticlePage(template, article) {
+function buildArticlePage(template, article, html, tagLabels) {
     const url = articleUrl(article.id);
-    const markdown = fs.readFileSync(path.join(ARTICLES_DIR, `${article.id}.md`), 'utf8');
     const jsonLd = JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
@@ -159,7 +205,10 @@ function buildArticlePage(template, article) {
         dateDisplay: formatDisplayDate(article.date),
         readTime: escapeHtml(article.readTime || '5 min'),
         jsonLd,
-        content: renderMarkdown(markdown),
+        tagLinks: article.tags
+            .map((t) => `<li><a href="../articles.html?tag=${t}">${escapeHtml(tagLabels.get(t))}</a></li>`)
+            .join(''),
+        content: html,
     });
 }
 
@@ -202,7 +251,9 @@ ${items.join('\n')}
 // ---------------------------------------------------------------- main
 
 function main() {
-    const articles = loadArticles();
+    const tags = loadTags();
+    const tagLabels = new Map(tags.map((t) => [t.id, t.label]));
+    const articles = loadArticles(new Set(tagLabels.keys()));
     const template = fs.readFileSync(path.join(ROOT, 'templates', 'article.html'), 'utf8');
 
     fs.rmSync(OUT, { recursive: true, force: true });
@@ -210,13 +261,19 @@ function main() {
         fs.cpSync(path.join(ROOT, entry), path.join(OUT, entry), { recursive: true });
     }
 
+    const searchIndex = {};
     for (const article of articles) {
-        fs.writeFileSync(path.join(OUT, 'articles', `${article.id}.html`), buildArticlePage(template, article));
+        const markdown = fs.readFileSync(path.join(ARTICLES_DIR, `${article.id}.md`), 'utf8');
+        const html = renderMarkdown(markdown);
+        searchIndex[article.id] = toSearchText(html);
+        fs.writeFileSync(path.join(OUT, 'articles', `${article.id}.html`), buildArticlePage(template, article, html, tagLabels));
     }
+    // Full-text index for the archive search; fetched only when a reader starts searching.
+    fs.writeFileSync(path.join(OUT, 'articles', 'search-index.json'), JSON.stringify(searchIndex));
     fs.writeFileSync(path.join(OUT, 'sitemap.xml'), buildSitemap(articles));
     fs.writeFileSync(path.join(OUT, 'feed.xml'), buildFeed(articles));
 
-    console.log(`Built ${articles.length} article pages, sitemap.xml and feed.xml into ${path.relative(ROOT, OUT)}/`);
+    console.log(`Built ${articles.length} article pages, search index, sitemap.xml and feed.xml into ${path.relative(ROOT, OUT)}/`);
 }
 
 try {

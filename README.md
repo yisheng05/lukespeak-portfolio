@@ -44,7 +44,7 @@ The build writes the publishable site to `_site/` (git-ignored). Generated pages
 
 ## ✍️ Adding an Article
 1. Add `articles/<id>.md`. A leading `# Title` line is optional; it is dropped because the page header already shows the title.
-2. Add an entry to `articles/articles.json` with the same `id` (lowercase-kebab-case), plus `title`, `date` (`YYYY-MM-DD`), `summary`, `readTime`, and `tags` (one or more ids from `articles/tags.json`, e.g. `["case-study", "agents"]`). The `summary` becomes the page description and the social preview text. To add a new topic, add it to `articles/tags.json` first; its position there sets the chip order.
+2. Add an entry to `articles/articles.json` with the same `id` (lowercase-kebab-case), plus `title`, `date` (`YYYY-MM-DD`), `summary`, `readTime`, and `tags` (one or more ids from `articles/tags.json`, e.g. `["case-study", "agents"]`). The `summary` becomes the page description and the social preview text. To add a new topic, add it to `articles/tags.json` first; its position there sets the chip order. Tag an article `case-study` only if it documents something you built: the homepage's featured section shows the four newest case studies.
 3. Tag code fences with a language (`python`, `bash`, `json`) for syntax highlighting. Untagged fences render as plain text, which suits ASCII diagrams.
 4. Run `npm run build` to check it. Keep drafts outside `articles/`: a Markdown file there without an `articles.json` entry fails the build.
 

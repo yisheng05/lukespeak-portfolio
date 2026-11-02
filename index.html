@@ -7,13 +7,13 @@
     <title>Lukespeak Engineering Insights | AI Architectures & Systems Showcase</title>
 
     <meta name="description"
-        content="Lukespeak Engineering Insights - Sharing production-grade AI agent architectures, zero-hallucination cognitive runtimes, and FastMCP protocol engineering with the international developer community.">
+        content="Case studies and essays by Luke Ong on agentic systems, AI architecture and data products: what was built, how it works, and where it breaks.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://yisheng05.github.io/lukespeak-portfolio/">
     <meta property="og:title" content="Lukespeak Engineering Insights | AI Architectures & Systems Showcase">
-    <meta property="og:description" content="Sharing production-grade AI agent architectures, zero-hallucination cognitive runtimes, and FastMCP protocol engineering with the international developer community.">
+    <meta property="og:description" content="Case studies and essays by Luke Ong on agentic systems, AI architecture and data products: what was built, how it works, and where it breaks.">
     <meta property="og:image" content="https://yisheng05.github.io/lukespeak-portfolio/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -23,7 +23,7 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://yisheng05.github.io/lukespeak-portfolio/">
     <meta property="twitter:title" content="Lukespeak Engineering Insights | AI Architectures & Systems Showcase">
-    <meta property="twitter:description" content="Sharing production-grade AI agent architectures, zero-hallucination cognitive runtimes, and FastMCP protocol engineering with the international developer community.">
+    <meta property="twitter:description" content="Case studies and essays by Luke Ong on agentic systems, AI architecture and data products: what was built, how it works, and where it breaks.">
     <meta property="twitter:image" content="https://yisheng05.github.io/lukespeak-portfolio/og-image.png">
 
     <!-- Favicon -->
@@ -86,9 +86,9 @@
                     <span class="hero-logo-word">LUKE<span class="text-gradient">SPEAK</span></span>
                     <span class="hero-logo-sub">Engineering Insights</span>
                 </h1>
-                <h2 class="hero-subtitle reveal" style="transition-delay: 0.1s">Production AI Architectures, Zero-Hallucination Runtimes & Agentic Systems</h2>
+                <h2 class="hero-subtitle reveal" style="transition-delay: 0.1s">Agentic Systems, AI Architecture &amp; Data Products</h2>
                 <p class="hero-description reveal" style="transition-delay: 0.2s">
-                    Building, learning, and sharing deep-tech agentic blueprints, FastMCP integrations, and symbolic cognitive runtimes with the international developer community.
+                    Case studies of systems I've built, with the architecture and the trade-offs, and essays on the research changing how teams build with AI agents.
                 </p>
                 <div class="hero-cta reveal" style="transition-delay: 0.3s">
                     <a href="articles.html" class="btn btn-primary">Explore Articles</a>
@@ -108,17 +108,20 @@
                     <div class="achievement-card glass-card reveal">
                         <div class="card-icon"><i class="fas fa-brain"></i></div>
                         <h3>Symbolic Cognitive Runtimes</h3>
-                        <p>Decoupling perception from reasoning using formal Text Meaning Representation (TMR) and Mental Meaning Representation (MMR) to eliminate LLM hallucinations in compliance and safety auditing.</p>
+                        <p>Separating perception from reasoning with Text and Mental Meaning Representation (TMR/MMR) graphs, so each compliance verdict traces to a fact in a knowledge graph and gaps are flagged rather than guessed.</p>
+                        <a href="articles/zero-hallucination-auditor.html" class="card-link">Case study: NIST AI RMF auditor <i class="fas fa-arrow-right"></i></a>
                     </div>
                     <div class="achievement-card glass-card reveal" style="transition-delay: 0.1s">
                         <div class="card-icon"><i class="fas fa-server"></i></div>
                         <h3>Stateful Serverless Webhooks</h3>
-                        <p>Architecting asynchronous Cloud Run endpoints with background thread handoffs, dynamic OpenStreetMap hydro-filling, and faceted knowledge graphs.</p>
+                        <p>Asynchronous Cloud Run webhooks that hand slow work to background threads, enriched by an OpenStreetMap and OneMap "hydro-fill" pipeline and faceted knowledge graphs.</p>
+                        <a href="articles/cloudrun-telegram-gemini.html" class="card-link">Case study: Telegram tourism agent <i class="fas fa-arrow-right"></i></a>
                     </div>
                     <div class="achievement-card glass-card reveal" style="transition-delay: 0.2s">
                         <div class="card-icon"><i class="fas fa-network-wired"></i></div>
                         <h3>Multi-Agent Graph Orchestration</h3>
-                        <p>Building deterministic LangGraph graphs with parallel domain specialists, stateful situation memory, and interactive citation tag matching.</p>
+                        <p>LangGraph state graphs with parallel domain specialists and strict <code>[REF-N]</code> citation matching, so every claim in a synthesised report points back to its source.</p>
+                        <a href="articles/dormant-asset-policy-strategic.html" class="card-link">Case study: regulatory synthesis <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -132,10 +135,10 @@
                     <div class="section-divider"></div>
                 </div>
                 <div id="featured-articles-container" class="articles-grid reveal">
-                    <!-- Populated dynamically by app.js -->
+                    <!-- Latest case studies, populated by js/article-loader.js -->
                 </div>
                 <div class="text-center mt-4 reveal">
-                    <a href="articles.html" class="btn btn-outline">View All Architectural Deep-Dives <i class="fas fa-arrow-right"></i></a>
+                    <a href="articles.html?tag=case-study" class="btn btn-outline">View All Case Studies <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </section>
@@ -149,11 +152,15 @@
                 </div>
                 <div class="about-content reveal text-center" style="max-width: 800px; margin: 0 auto;">
                     <p class="lead-text">
-                        Every article in <strong>Lukespeak Engineering Insights</strong> is backed by working code, production deployments, and real-world experiments.
+                        Two kinds of writing live here. <strong>Case studies</strong> document systems I've built: the architecture, the code and the trade-offs. <strong>Essays</strong> work through the research and industry shifts behind them.
                     </p>
                     <p>
-                        As AI engineering transitions from simple prompt engineering to deterministic stateful runtimes, machine-verifiable protocols, and FastMCP tool interfaces, we document our architectural patterns to foster knowledge exchange across the global developer community.
+                        I'm Luke Ong, a product manager working on data and AI in Singapore. I write for engineers and product teams who have to make these systems work inside real organisations, so I try to show what was built, how it works, and where it breaks.
                     </p>
+                    <div class="mission-links">
+                        <a href="articles.html?tag=case-study" class="btn btn-primary">Browse Case Studies</a>
+                        <a href="https://www.linkedin.com/in/lukeong7" target="_blank" rel="noopener noreferrer" class="btn btn-outline"><i class="fab fa-linkedin-in"></i> Connect on LinkedIn</a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -164,7 +171,7 @@
         <div class="container footer-content">
             <div class="footer-info">
                 <h3 class="footer-logo">LUKE<span>SPEAK</span> <small style="font-size: 0.6em; color: var(--accent-primary);">ENGINEERING INSIGHTS</small></h3>
-                <p>A technical publication sharing open AI architectures, zero-hallucination agent runtimes, and FastMCP engineering.</p>
+                <p>Case studies and essays on agentic systems, AI architecture and data products, by Luke Ong.</p>
                 <div class="social-links">
                     <a href="https://www.linkedin.com/in/lukeong7" target="_blank" aria-label="LinkedIn"
                         class="social-icon">

@@ -1,13 +1,14 @@
 /**
  * Article Loader Logic
- * Handles fetching markdown files and rendering them for the portfolio
+ * Renders the article lists (archive and homepage featured cards) from
+ * articles/articles.json. Article pages themselves are pre-rendered by
+ * scripts/build.mjs.
  */
 
 const ArticleLoader = {
     // Configuration
     config: {
-        articlesIndexPath: 'articles/articles.json',
-        articlesDir: 'articles/'
+        articlesIndexPath: 'articles/articles.json'
     },
 
     /**
@@ -18,34 +19,6 @@ const ArticleLoader = {
         // readers west of UTC (e.g. the Americas) see the previous day.
         const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
         return new Date(dateString).toLocaleDateString(undefined, options);
-    },
-
-    /**
-     * marked extension that passes LaTeX through untouched for MathJax.
-     * Without it, marked treats "\(" and "\[" as escaped punctuation and strips
-     * the backslash, so inline math like \(H\) renders as the literal "(H)".
-     */
-    mathExtension: {
-        extensions: [{
-            name: 'math',
-            level: 'inline',
-            start(src) {
-                const i = src.search(/\\\(|\\\[|\$\$/);
-                return i === -1 ? undefined : i;
-            },
-            tokenizer(src) {
-                const match = /^(?:\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\]|\$\$[\s\S]+?\$\$)/.exec(src);
-                if (match) {
-                    return { type: 'math', raw: match[0], text: match[0] };
-                }
-            },
-            renderer(token) {
-                return token.text
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;');
-            }
-        }]
     },
 
     // In-memory state for filtering
@@ -124,7 +97,7 @@ const ArticleLoader = {
             articles.forEach((article, index) => {
                 const delay = index * 0.05; // faster stagger for filtering
                 html += `
-                    <a href="article.html?id=${article.id}" class="article-card glass-card reveal active" style="transition-delay: ${delay}s">
+                    <a href="articles/${article.id}.html" class="article-card glass-card reveal active" style="transition-delay: ${delay}s">
                         <div class="article-date">
                             <i class="far fa-calendar-alt"></i> ${this.formatDate(article.date)}
                             <span style="margin-left: 10px;"><i class="far fa-clock"></i> ${article.readTime || '5 min'} read</span>
@@ -236,100 +209,6 @@ const ArticleLoader = {
     },
 
     /**
-     * Load a single article for the article.html page based on URL parameter
-     */
-    loadSingleArticle: async function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const articleId = urlParams.get('id');
-
-        const titleEl = document.getElementById('article-title');
-        const contentEl = document.getElementById('article-content');
-        const dateEl = document.getElementById('article-date');
-        const readTimeEl = document.getElementById('article-read-time');
-
-        if (!articleId) {
-            titleEl.textContent = 'Article Not Found';
-            contentEl.innerHTML = '<p>No article ID specified in the URL. Please return to the <a href="articles.html" style="color:var(--accent-primary)">Articles list</a>.</p>';
-            return;
-        }
-
-        try {
-            // 1. Fetch metadata to get title and date
-            const indexResponse = await fetch(this.config.articlesIndexPath);
-            if (!indexResponse.ok) throw new Error('Could not load articles index');
-
-            const articles = await indexResponse.json();
-            const articleMeta = articles.find(a => a.id === articleId);
-
-            if (!articleMeta) {
-                titleEl.textContent = 'Article Not Found';
-                contentEl.innerHTML = '<p>The requested article does not exist. Please return to the <a href="articles.html" style="color:var(--accent-primary)">Articles list</a>.</p>';
-                return;
-            }
-
-            // Update Meta Info
-            document.title = `${articleMeta.title} | Lukespeak Engineering Insights`;
-            titleEl.innerHTML = articleMeta.title;
-            dateEl.innerHTML = `<i class="far fa-calendar"></i> ${this.formatDate(articleMeta.date)}`;
-            readTimeEl.innerHTML = `<i class="far fa-clock"></i> ${articleMeta.readTime || '5 min'} read`;
-
-            // 2. Fetch Markdown content
-            const mdResponse = await fetch(`${this.config.articlesDir}${articleId}.md`);
-            if (!mdResponse.ok) throw new Error('Could not fetch markdown file');
-
-            const markdownContent = await mdResponse.text();
-
-            // 3. Parse Markdown to HTML
-            // Ensure marked is available
-            if (typeof marked === 'undefined') {
-                throw new Error('Markdown parser (marked.js) is not loaded.');
-            }
-
-            // Configure marked for security
-            marked.setOptions({
-                headerIds: true,
-                gfm: true, // GitHub Flavored Markdown
-                breaks: true
-            });
-            marked.use(this.mathExtension);
-
-            // Strip leading # H1 heading if present — the hero section already
-            // shows the title via <h1 id="article-title">, so rendering it again
-            // from the markdown would produce a duplicate heading.
-            const strippedContent = markdownContent.replace(/^# .+\n?/, '');
-
-            const htmlContent = marked.parse(strippedContent);
-
-            // Inject content
-            contentEl.innerHTML = htmlContent;
-
-            // Wrap tables in responsive div
-            const tables = contentEl.querySelectorAll('table');
-            tables.forEach(table => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'table-wrapper';
-                table.parentNode.insertBefore(wrapper, table);
-                wrapper.appendChild(table);
-            });
-
-            // Trigger PrismJS highlighting
-            if (typeof Prism !== 'undefined') {
-                Prism.highlightAllUnder(contentEl);
-            }
-
-            // 4. Trigger MathJax if available
-            if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
-                window.MathJax.typesetPromise([contentEl]).catch((err) => console.log('MathJax typeset failed: ' + err.message));
-            }
-
-        } catch (error) {
-            console.error('Error loading article:', error);
-            titleEl.textContent = 'Error Loading Article';
-            contentEl.innerHTML = `<p style="color: #ff6b6b;"><i class="fas fa-exclamation-circle"></i> ${error.message}. Please try again later.</p>`;
-        }
-    },
-
-    /**
      * Load top featured articles for the index.html landing page
      */
     loadFeaturedArticles: async function () {
@@ -350,7 +229,7 @@ const ArticleLoader = {
             featured.forEach((article, index) => {
                 const delay = index * 0.1;
                 html += `
-                    <a href="article.html?id=${article.id}" class="article-card glass-card reveal" style="transition-delay: ${delay}s">
+                    <a href="articles/${article.id}.html" class="article-card glass-card reveal" style="transition-delay: ${delay}s">
                         <div class="article-date">
                             <i class="far fa-calendar-alt"></i> ${this.formatDate(article.date)}
                             <span style="margin-left: 10px;"><i class="far fa-clock"></i> ${article.readTime || '5 min'} read</span>

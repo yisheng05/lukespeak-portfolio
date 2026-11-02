@@ -4,321 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lukespeak Engineering Insights | AI Architectures & Systems Showcase</title>
+    <!-- Legacy URL: articles used to live at article.html?id=<id>. Each article now has
+         its own pre-rendered page at articles/<id>.html (see scripts/build.mjs). This
+         page only forwards old links, which are already shared on LinkedIn. -->
+    <title>Lukespeak Engineering Insights</title>
+    <meta name="robots" content="noindex">
 
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Lukespeak Engineering Insights - Sharing production-grade AI agent architectures, zero-hallucination cognitive runtimes, and FastMCP protocol engineering with the international developer community.">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="https://yisheng05.github.io/lukespeak-portfolio/article.html">
-    <meta property="og:title" content="Lukespeak Engineering Insights | AI Architectures & Systems Showcase">
-    <meta property="og:description" content="Sharing production-grade AI agent architectures, zero-hallucination cognitive runtimes, and FastMCP protocol engineering with the international developer community.">
+    <!-- Crawlers can't run the redirect, so old links keep the site-wide preview -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Lukespeak Engineering Insights">
+    <meta property="og:title" content="Lukespeak Engineering Insights">
+    <meta property="og:description" content="Articles on AI architectures, agentic systems, and data products.">
     <meta property="og:image" content="https://yisheng05.github.io/lukespeak-portfolio/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Lukespeak Engineering Insights">
+    <meta name="twitter:card" content="summary_large_image">
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://yisheng05.github.io/lukespeak-portfolio/article.html">
-    <meta property="twitter:title" content="Lukespeak Engineering Insights | AI Architectures & Systems Showcase">
-    <meta property="twitter:description" content="Sharing production-grade AI agent architectures, zero-hallucination cognitive runtimes, and FastMCP protocol engineering with the international developer community.">
-    <meta property="twitter:image" content="https://yisheng05.github.io/lukespeak-portfolio/og-image.png">
-
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
-        rel="stylesheet">
-
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css">
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CPCNFM254Q"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-CPCNFM254Q');
+        (function () {
+            var id = new URLSearchParams(window.location.search).get('id');
+            var target = id && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)
+                ? 'articles/' + id + '.html'
+                : 'articles.html';
+            window.location.replace(target + window.location.hash);
+        })();
     </script>
-    <!-- Marked.js for Markdown parsing.
-         Pinned: marked dropped marked.min.js after v15, so the unversioned URL only
-         worked via a silent CDN fallback to 15.0.12. Bump deliberately (v16+ ships
-         lib/marked.umd.js instead) and regenerate the integrity hash. -->
-    <script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"
-        integrity="sha384-948ahk4ZmxYVYOc+rxN1H2gM1EJ2Duhp7uHtZ4WSLkV4Vtx5MUqnV+l7u9B+jFv+"
-        crossorigin="anonymous"></script>
-
-    <!-- PrismJS for syntax highlighting (Tomorrow Night theme) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
-
-    <!-- MathJax for LaTeX rendering -->
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true
-            },
-            options: {
-                ignoreHtmlClass: 'tex2jax_ignore',
-                processHtmlClass: 'tex2jax_process'
-            }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"
-        integrity="sha384-Wuix6BuhrWbjDBs24bXrjf4ZQ5aFeFWBuKkFekO2t8xFU0iNaLQfp2K6/1Nxveei"
-        crossorigin="anonymous"></script>
-
     <style>
-        .article-hero {
-            padding-top: 150px;
-            padding-bottom: 50px;
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        #article-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            line-height: 1.2;
-            margin-bottom: 1rem;
-        }
-
-        #article-meta {
-            color: var(--text-secondary);
-            font-family: var(--font-sans);
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .article-content {
-            max-width: 760px;
-            margin: 0 auto var(--spacing-xl);
-            font-size: 1.15rem;
-            line-height: 1.8;
-            color: #d1d1e0;
-        }
-
-        /* Markdown Specific Styling */
-        .article-content h2 {
-            font-size: 2rem;
-            margin-top: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
-
-        .article-content h3 {
-            font-size: 1.5rem;
-            margin-top: 2rem;
-            margin-bottom: 0.8rem;
-            color: var(--text-primary);
-        }
-
-        .article-content p {
-            margin-bottom: 1.5rem;
-            color: #d1d1e0;
-        }
-
-        .article-content ul,
-        .article-content ol {
-            margin-bottom: 1.5rem;
-            padding-left: 2rem;
-        }
-
-        .article-content li {
-            margin-bottom: 0.5rem;
-        }
-
-        .article-content blockquote {
-            border-left: 4px solid var(--accent-primary);
-            padding-left: 1.5rem;
-            margin: 2rem 0;
-            font-style: italic;
-            color: var(--text-secondary);
-            background: rgba(255, 255, 255, 0.02);
-            padding: 1rem 1.5rem;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .article-content strong {
-            color: var(--text-primary);
-        }
-
-        /* Table Styling */
-        .article-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 2rem 0;
-            font-family: var(--font-sans);
-            font-size: 0.95rem;
-            overflow-x: auto;
-            display: block;
-        }
-
-        .article-content th {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--accent-primary);
-            text-align: left;
-            padding: 12px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .article-content td {
-            padding: 12px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #d1d1e0;
-            vertical-align: top;
-        }
-
-        .article-content tr:nth-child(even) {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .article-content tr:hover {
-            background: rgba(255, 255, 255, 0.04);
-        }
-
-        .article-content a {
-            color: var(--accent-primary);
-            text-decoration: underline;
-            text-underline-offset: 4px;
-            transition: var(--transition-fast);
-        }
-
-        .article-content a:hover {
-            color: var(--accent-secondary);
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--accent-primary);
-            text-decoration: none;
-            margin-bottom: 2rem;
-            font-weight: 500;
-            transition: var(--transition-fast);
-        }
-
-        .back-link:hover {
-            color: var(--text-primary);
-            transform: translateX(-5px);
-        }
+        body { background: #0a0a0f; color: #a0a0b0; font-family: system-ui, sans-serif; text-align: center; padding: 4rem 1rem; }
+        a { color: #6366f1; }
     </style>
 </head>
 
-<body class="dark-theme">
-    <!-- Animated Background Elements -->
-    <div class="blob blob-2" style="top: -20%; right: -10%;"></div>
-
-    <!-- Navigation -->
-    <header class="glass-header">
-        <nav class="container nav-container">
-            <a href="index.html" class="logo">LUKE<span>SPEAK</span> <small class="logo-sub">Engineering Insights</small></a>
-
-            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <ul class="nav-links" id="navLinks">
-                <li><a href="index.html#paradigms" class="nav-link">Architectures</a></li>
-                <li><a href="index.html#featured" class="nav-link">Featured Insights</a></li>
-                <li><a href="articles.html" class="nav-link active">All Articles</a></li>
-                <li><a href="https://deepresearch-706006852307.asia-southeast1.run.app" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">Deep Research</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main class="container">
-        <div class="article-hero reveal">
-            <a href="articles.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Articles</a>
-            <h1 id="article-title">Loading...</h1>
-            <div id="article-meta">
-                <span id="article-date"><i class="far fa-calendar"></i></span>
-                <span id="article-read-time"><i class="far fa-clock"></i></span>
-            </div>
-            <div class="section-divider"></div>
-        </div>
-
-        <div id="article-content" class="article-content reveal" style="transition-delay: 0.1s">
-            <!-- Content loaded via JS -->
-            <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
-                <i class="fas fa-circle-notch fa-spin fa-3x"
-                    style="color: var(--accent-primary); margin-bottom: 1rem;"></i>
-                <p>Loading the article content...</p>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer id="contact" class="glass-footer">
-        <div class="container footer-content">
-            <div class="footer-info">
-                <h3 class="footer-logo">LUKE<span>SPEAK</span> <small style="font-size: 0.6em; color: var(--accent-primary);">ENGINEERING INSIGHTS</small></h3>
-                <p>A technical publication sharing open AI architectures, zero-hallucination agent runtimes, and FastMCP engineering.</p>
-                <div class="social-links">
-                    <a href="https://www.linkedin.com/in/lukeong7" target="_blank" aria-label="LinkedIn"
-                        class="social-icon">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="mailto:yisheng.ong@gmail.com" aria-label="Email" class="social-icon">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-                </div>
-            </div>
-
-            <div class="footer-links">
-                <h4>Navigation</h4>
-                <ul>
-                    <li><a href="index.html#paradigms">Architectures</a></li>
-                    <li><a href="index.html#featured">Featured Insights</a></li>
-                    <li><a href="articles.html">All Articles</a></li>
-                    <li><a href="https://deepresearch-706006852307.asia-southeast1.run.app" target="_blank">Deep Research</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-contact">
-                <h4>Get In Touch</h4>
-                <p><i class="fas fa-envelope"></i> yisheng.ong@gmail.com</p>
-            </div>
-        </div>
-        <div class="footer-bottom container">
-            <p>&copy; <span id="currentYear"></span> Lukespeak Engineering Insights. Built for the developer community.</p>
-        </div>
-    </footer>
-
-    <!-- Web App Logic -->
-    <script src="js/app.js"></script>
-    <script src="js/article-loader.js"></script>
-    <script>
-        // Initialize Single Article Load
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof ArticleLoader !== 'undefined') {
-                ArticleLoader.loadSingleArticle();
-            }
-        });
-    </script>
+<body>
+    <p>Redirecting&hellip; If nothing happens, go to <a href="articles.html">all articles</a>.</p>
 </body>
 
 </html>

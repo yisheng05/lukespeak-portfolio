@@ -1,11 +1,14 @@
 {
   "name": "lukespeak-portfolio",
   "version": "1.0.0",
-  "description": "Lukespeak Engineering Insights - static site deployed to GitHub Pages via .github/workflows/static.yml",
+  "description": "Lukespeak Engineering Insights - static site built by scripts/build.mjs and deployed to GitHub Pages",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "marked": "15.0.12"
+  },
   "scripts": {
-    "dev": "python3 -m http.server 8000"
+    "build": "node scripts/build.mjs",
+    "dev": "npm run build && python3 -m http.server 8000 --directory _site"
   },
   "repository": {
     "type": "git",

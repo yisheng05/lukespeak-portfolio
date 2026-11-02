@@ -1,16 +1,11 @@
 {
-  "dependencies": {
-    "gh-pages": "^6.3.0"
-  },
   "name": "lukespeak-portfolio",
   "version": "1.0.0",
-  "description": "",
+  "description": "Lukespeak Engineering Insights - static site deployed to GitHub Pages via .github/workflows/static.yml",
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
-    "dev": "/Users/ongyishengluke/code/.venv/bin/python3 -m http.server 8000",
-    "deploy": "gh-pages -d .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "python3 -m http.server 8000"
   },
   "repository": {
     "type": "git",

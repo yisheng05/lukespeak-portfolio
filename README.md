@@ -1,22 +1,24 @@
-# Luke Ong | Product Management Leader Portfolio
+# Lukespeak Engineering Insights
 
-This is the personal portfolio website of Luke Ong, a Product Management Leader and strategist specializing in AI/ML solutions, data analytics, and government-enterprise environments. 
+Source for [Lukespeak Engineering Insights](https://yisheng05.github.io/lukespeak-portfolio/), Luke Ong's publication on AI architectures, agentic systems, and data products.
 
-The site is built with pure HTML, CSS, and vanilla JavaScript, employing a modern dark-theme glassmorphism design.
+The site is built with pure HTML, CSS, and vanilla JavaScript, employing a modern dark-theme glassmorphism design. There is no build step: articles are Markdown files rendered in the browser.
 
 ## 🚀 Features
 - **Dynamic Articles Loader**: Fetches and renders articles written in Markdown format on-the-fly using `marked.js`.
-- **LaTeX Math Rendering**: Supports rendering mathematical equations in articles using `MathJax`.
-- **Premium Aesthetics**: Includes dynamic animated background elements, glassmorphic cards and headers, responsive navigation, and staggered load animations.
+- **LaTeX Math Rendering**: Supports inline `\( … \)` and display `$$ … $$` / `\[ … \]` math via `MathJax`.
+- **Search & Category Filters**: Client-side search and filtering on the articles page.
 - **Fully Responsive**: Optimized for all viewports from mobile devices to desktop displays.
 
 ---
 
 ## 📂 Project Structure
 ```text
-├── index.html          # Main landing page (About, Experience, Achievements)
-├── articles.html       # Archive list of all articles
+├── index.html          # Landing page (hero, engineering paradigms, featured articles)
+├── articles.html       # Archive list of all articles with search and filters
 ├── article.html        # Single article page layout (loads MD dynamically)
+├── og-image.png        # 1200×630 social share preview (og:image / twitter:image)
+├── favicon.svg
 ├── css/
 │   └── style.css       # Core stylesheet (custom properties, animations, markdown rules)
 ├── js/
@@ -25,34 +27,31 @@ The site is built with pure HTML, CSS, and vanilla JavaScript, employing a moder
 ├── articles/
 │   ├── articles.json   # Index metadata of all articles
 │   └── *.md            # Individual article source files in Markdown format
-└── package.json        # Project metadata and dependencies (gh-pages deployment)
+└── .github/workflows/
+    └── static.yml      # Deploys the site to GitHub Pages on every push to main
 ```
+
+## ✍️ Adding an Article
+1. Add `articles/<id>.md`. A leading `# Title` line is optional; it is stripped because the page header already shows the title.
+2. Add an entry to `articles/articles.json` with the same `id`, plus `title`, `date` (`YYYY-MM-DD`), `summary`, and `readTime`.
+3. Tag code fences with a language (`python`, `bash`, `json`) for syntax highlighting. Untagged fences render as plain text, which suits ASCII diagrams.
 
 ---
 
 ## 🛠️ Local Development
 
-To run and preview the website locally, use Python's built-in HTTP server:
+Serve the folder with any static server, for example:
 
 ```bash
-# Run server using the project's Python virtual environment
-/Users/ongyishengluke/code/.venv/bin/python3 -m http.server 8000
+npm run dev
 ```
 
-Once the server is running, navigate to:
-👉 **[http://localhost:8000](http://localhost:8000)**
+This runs `python3 -m http.server 8000`. Then open **[http://localhost:8000](http://localhost:8000)**.
 
 ---
 
 ## 🚢 Deployment
 
-The portfolio is hosted on **GitHub Pages** and served from the `gh-pages` branch. 
+Pushing to `main` deploys the site automatically: `.github/workflows/static.yml` uploads the repository as a GitHub Pages artifact and publishes it. There is no manual deploy command.
 
-### To Deploy Changes:
-To publish your local changes to the live site, run:
-
-```bash
-npx gh-pages -d .
-```
-
-This will automatically push the directory contents to the `gh-pages` branch, updating the live site.
+One-time repository setting: **Settings → Pages → Build and deployment → Source** must be set to **GitHub Actions**. If it is set to "Deploy from a branch", GitHub also runs its built-in "pages build and deployment" job on every push, which fails and leaves a red ✗ on each commit.

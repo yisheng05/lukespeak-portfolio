@@ -48,6 +48,7 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
@@ -55,7 +56,12 @@ body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
-    overflow-x: hidden;
+    /* Clip the off-canvas .blob backgrounds at the body itself. With overflow
+       set only on body, it propagates to the viewport, and mobile browsers widen
+       the layout viewport to fit the blobs, which pushes the fixed header's menu
+       button off-screen. "clip" (unlike "hidden") doesn't make body a scroll
+       container, so vertical overflow and page scrolling are unaffected. */
+    overflow-x: clip;
     position: relative;
 }
 
@@ -847,6 +853,17 @@ a {
     border-radius: 10px;
     border: 1px solid var(--glass-border);
     background: #0f1015 !important;
+    /* Prism's theme only adds scrolling to pre[class*="language-"]; untagged
+       fences (e.g. ASCII diagrams) would otherwise be clipped on mobile. */
+    overflow-x: auto;
+    padding: 1em; /* matches Prism's padding for language-tagged blocks */
+}
+
+/* Wide display equations scroll inside the column instead of being clipped */
+.article-content mjx-container[display="true"] {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
 }
 
 .table-wrapper {

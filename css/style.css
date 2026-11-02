@@ -612,6 +612,50 @@ a {
 
 .achievement-card {
     height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.achievement-card p {
+    flex-grow: 1;
+}
+
+.achievement-card code {
+    font-size: 0.9em;
+    color: var(--text-primary);
+}
+
+/* Link from each engineering paradigm to the case study that backs it */
+.card-link {
+    display: inline-block;
+    margin-top: var(--spacing-sm);
+    color: var(--accent-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+/* Inline arrow, so it follows the last word when the label wraps on phones */
+.card-link i {
+    margin-left: 6px;
+    transition: var(--transition-fast);
+}
+
+.card-link:hover {
+    color: var(--text-primary);
+}
+
+.card-link:hover i {
+    transform: translateX(4px);
+}
+
+.mission-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
 }
 
 .card-icon {

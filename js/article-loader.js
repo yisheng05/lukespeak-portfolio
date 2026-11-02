@@ -439,11 +439,15 @@ const ArticleLoader = {
                 this.fetchJson(this.config.articlesIndexPath),
                 this.loadTags()
             ]);
-            const featured = this.newestFirst(articles).slice(0, 4);
+            // The section is "Application Architecture Showcases", so feature the latest case
+            // studies; top up with the newest other articles if there are fewer than four.
+            const sorted = this.newestFirst(articles);
+            const isCaseStudy = (a) => (a.tags || []).includes('case-study');
+            const featured = [...sorted.filter(isCaseStudy), ...sorted.filter((a) => !isCaseStudy(a))].slice(0, 4);
 
             container.innerHTML = featured.map((article, index) => this.renderCard(article, {
                 headingTag: 'h3',
-                ctaLabel: (article.tags || []).includes('case-study') ? 'Read Architectural Case Study' : 'Read Full Article',
+                ctaLabel: isCaseStudy(article) ? 'Read Architectural Case Study' : 'Read Full Article',
                 delay: index * 0.1,
                 revealed: false
             })).join('');

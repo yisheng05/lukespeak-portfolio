@@ -1,19 +1,41 @@
 /**
  * Article Loader Logic
  * Renders the article lists (archive and homepage featured cards) from
- * articles/articles.json. Article pages themselves are pre-rendered by
- * scripts/build.mjs.
+ * articles/articles.json and articles/tags.json, and powers archive search.
+ * Article pages themselves are pre-rendered by scripts/build.mjs.
+ *
+ * Archive search:
+ * - Every word in the query must appear somewhere in the title, tags, summary
+ *   or full article text (articles/search-index.json, fetched on first use).
+ * - Results are ranked title > tags > summary > body, newest first on ties.
+ * - The query and topic live in the URL (?q=…&tag=…), so a filtered view can
+ *   be shared and survives the back button.
  */
 
 const ArticleLoader = {
-    // Configuration
     config: {
-        articlesIndexPath: 'articles/articles.json'
+        articlesIndexPath: 'articles/articles.json',
+        tagsPath: 'articles/tags.json',
+        searchIndexPath: 'articles/search-index.json',
+        // Wait for typing to pause before updating the URL and analytics
+        settleDelayMs: 700
     },
 
-    /**
-     * Format a date string into a nice readable format
-     */
+    state: {
+        articles: [],
+        tags: [],
+        tagLabels: {},
+        query: '',
+        tag: 'all',
+        bodies: null,        // { id: lowercased full text } once the index has loaded
+        rawBodies: null,     // { id: full text } for result snippets
+        indexRequest: null,
+        settleTimer: null,
+        lastTrackedQuery: ''
+    },
+
+    // ------------------------------------------------------------ utilities
+
     formatDate: function (dateString) {
         // "YYYY-MM-DD" parses as UTC midnight, so format in UTC too; otherwise
         // readers west of UTC (e.g. the Americas) see the previous day.
@@ -21,151 +43,362 @@ const ArticleLoader = {
         return new Date(dateString).toLocaleDateString(undefined, options);
     },
 
-    // In-memory state for filtering
-    state: {
-        articles: [],
-        currentCategory: 'all',
-        searchQuery: ''
+    escapeHtml: function (value) {
+        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+        return String(value).replace(/[&<>"']/g, (c) => map[c]);
     },
 
-    /**
-     * Determine if an article matches a category tag
-     */
-    matchesCategory: function (article, category) {
-        if (category === 'all') return true;
-        
-        const title = (article.title || '').toLowerCase();
-        const summary = (article.summary || '').toLowerCase();
-        const id = (article.id || '').toLowerCase();
-        const combined = `${id} ${title} ${summary}`;
-        
-        if (category === 'agents') {
-            return combined.includes('agent') || 
-                   combined.includes('langgraph') || 
-                   combined.includes('orchestration') || 
-                   combined.includes('chain') || 
-                   combined.includes('infrastructure') || 
-                   combined.includes('bottleneck');
-        }
-        if (category === 'safety') {
-            return combined.includes('hallucination') || 
-                   combined.includes('safety') || 
-                   combined.includes('trust') || 
-                   combined.includes('nist') || 
-                   combined.includes('govern') || 
-                   combined.includes('cognitive') || 
-                   combined.includes('runtime') || 
-                   combined.includes('protocol') || 
-                   combined.includes('state machine') || 
-                   combined.includes('vibe coding');
-        }
-        if (category === 'geospatial') {
-            return combined.includes('gis') || 
-                   combined.includes('onemap') || 
-                   combined.includes('map') || 
-                   combined.includes('geospatial') || 
-                   combined.includes('telegram') || 
-                   combined.includes('webhook') || 
-                   combined.includes('hydro') || 
-                   combined.includes('fill');
-        }
-        if (category === 'product') {
-            return combined.includes('product') || 
-                   combined.includes('prioritization') || 
-                   combined.includes('strategy') || 
-                   combined.includes('drop') || 
-                   combined.includes('retail') || 
-                   combined.includes('ecosystem') || 
-                   combined.includes('data') || 
-                   combined.includes('analytics');
-        }
-        return false;
+    fetchJson: async function (path) {
+        const response = await fetch(path);
+        if (!response.ok) throw new Error(`Could not load ${path}`);
+        return response.json();
     },
 
-    /**
-     * Render the article cards HTML
-     */
-    renderArticleList: function (articles) {
+    loadTags: async function () {
+        try {
+            const tags = await this.fetchJson(this.config.tagsPath);
+            this.state.tags = tags;
+            this.state.tagLabels = Object.fromEntries(tags.map((t) => [t.id, t.label]));
+        } catch (error) {
+            console.error('Error loading tags:', error); // cards still render, just without topic labels
+        }
+    },
+
+    tagLabel: function (id) {
+        return this.state.tagLabels[id] || id;
+    },
+
+    newestFirst: function (articles) {
+        return articles.sort((a, b) => b.date.localeCompare(a.date));
+    },
+
+    // ------------------------------------------------------------ search
+
+    queryTerms: function (query) {
+        return [...new Set(query.toLowerCase().split(/\s+/).filter(Boolean))];
+    },
+
+    loadSearchIndex: function () {
+        if (!this.state.indexRequest) {
+            this.state.indexRequest = this.fetchJson(this.config.searchIndexPath)
+                .then((index) => {
+                    this.state.rawBodies = index;
+                    this.state.bodies = Object.fromEntries(
+                        Object.entries(index).map(([id, text]) => [id, text.toLowerCase()])
+                    );
+                    if (this.state.query.trim()) this.applyFilters({ settle: false });
+                })
+                .catch((error) => {
+                    // Title, summary and tag search keep working without it
+                    console.error('Full-text search unavailable:', error);
+                });
+        }
+        return this.state.indexRequest;
+    },
+
+    /** Returns null when some term matches nowhere; otherwise a relevance score. */
+    scoreArticle: function (article, terms) {
+        const title = article.title.toLowerCase();
+        const summary = article.summary.toLowerCase();
+        const tags = (article.tags || []).map((t) => this.tagLabel(t)).join(' ').toLowerCase();
+        const body = this.state.bodies ? (this.state.bodies[article.id] || '') : '';
+        let score = 0;
+        for (const term of terms) {
+            let termScore = 0;
+            if (title.includes(term)) termScore += 8;
+            if (tags.includes(term)) termScore += 5;
+            if (summary.includes(term)) termScore += 3;
+            if (body.includes(term)) termScore += 1;
+            if (termScore === 0) return null;
+            score += termScore;
+        }
+        return score;
+    },
+
+    /** Escape text and wrap query matches in <mark>. Single characters are not highlighted. */
+    highlight: function (text, terms) {
+        const marks = terms.filter((t) => t.length > 1);
+        if (!marks.length) return this.escapeHtml(text);
+        const lower = text.toLowerCase();
+        const ranges = [];
+        for (const term of marks) {
+            for (let i = lower.indexOf(term); i !== -1; i = lower.indexOf(term, i + term.length)) {
+                ranges.push([i, i + term.length]);
+            }
+        }
+        if (!ranges.length) return this.escapeHtml(text);
+        ranges.sort((a, b) => a[0] - b[0]);
+        const merged = [ranges[0]];
+        for (const [start, end] of ranges.slice(1)) {
+            const last = merged[merged.length - 1];
+            if (start <= last[1]) last[1] = Math.max(last[1], end);
+            else merged.push([start, end]);
+        }
+        let html = '';
+        let cursor = 0;
+        for (const [start, end] of merged) {
+            html += this.escapeHtml(text.slice(cursor, start)) + '<mark>' + this.escapeHtml(text.slice(start, end)) + '</mark>';
+            cursor = end;
+        }
+        return html + this.escapeHtml(text.slice(cursor));
+    },
+
+    /** A short excerpt of the article text around the first match. */
+    snippet: function (id, terms) {
+        const raw = this.state.rawBodies && this.state.rawBodies[id];
+        if (!raw) return '';
+        const lower = this.state.bodies[id];
+        let pos = -1;
+        let length = 0;
+        for (const term of terms) {
+            const i = lower.indexOf(term);
+            if (i !== -1 && (pos === -1 || i < pos)) {
+                pos = i;
+                length = term.length;
+            }
+        }
+        if (pos === -1) return '';
+        let start = Math.max(0, pos - 70);
+        let end = Math.min(raw.length, pos + length + 110);
+        if (start > 0) {
+            const space = raw.indexOf(' ', start);
+            if (space !== -1 && space < pos) start = space + 1;
+        }
+        if (end < raw.length) {
+            const space = raw.lastIndexOf(' ', end);
+            if (space > pos + length) end = space;
+        }
+        return (start > 0 ? '… ' : '') + this.highlight(raw.slice(start, end), terms) + (end < raw.length ? ' …' : '');
+    },
+
+    // ------------------------------------------------------------ rendering
+
+    renderCard: function (article, options = {}) {
+        const { headingTag = 'h2', ctaLabel = 'Read Full Article', terms = [], delay = 0, revealed = true } = options;
+        const title = article.title.toLowerCase();
+        const summary = article.summary.toLowerCase();
+        // Only show where it matched when the title and summary don't already explain it
+        const needsSnippet = terms.some((t) => !title.includes(t) && !summary.includes(t));
+        const snippet = needsSnippet ? this.snippet(article.id, terms) : '';
+        const tags = (article.tags || [])
+            .map((t) => `<li class="tag-chip">${this.escapeHtml(this.tagLabel(t))}</li>`)
+            .join('');
+
+        return `
+            <a href="articles/${article.id}.html" class="article-card glass-card reveal${revealed ? ' active' : ''}" style="transition-delay: ${delay}s">
+                <div class="article-date">
+                    <i class="far fa-calendar-alt"></i> ${this.formatDate(article.date)}
+                    <span style="margin-left: 10px;"><i class="far fa-clock"></i> ${this.escapeHtml(article.readTime || '5 min')} read</span>
+                </div>
+                <${headingTag} class="article-title">${this.highlight(article.title, terms)}</${headingTag}>
+                ${tags ? `<ul class="card-tags" aria-label="Topics">${tags}</ul>` : ''}
+                <p class="article-summary">${this.highlight(article.summary, terms)}</p>
+                ${snippet ? `<p class="search-snippet"><span class="snippet-label">In the article:</span> ${snippet}</p>` : ''}
+                <span class="read-more">${ctaLabel} <i class="fas fa-arrow-right"></i></span>
+            </a>`;
+    },
+
+    renderArticleList: function (articles, terms) {
         const container = document.getElementById('articles-container');
         if (!container) return;
-        
-        let html = '';
-        
+
         if (articles.length === 0) {
-            html = '<div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;"><p><i class="fas fa-search" style="font-size: 2rem; color: var(--accent-primary); margin-bottom: 1rem;"></i><br>No articles match your search criteria.</p></div>';
-        } else {
-            articles.forEach((article, index) => {
-                const delay = index * 0.05; // faster stagger for filtering
-                html += `
-                    <a href="articles/${article.id}.html" class="article-card glass-card reveal active" style="transition-delay: ${delay}s">
-                        <div class="article-date">
-                            <i class="far fa-calendar-alt"></i> ${this.formatDate(article.date)}
-                            <span style="margin-left: 10px;"><i class="far fa-clock"></i> ${article.readTime || '5 min'} read</span>
-                        </div>
-                        <h2 class="article-title">${article.title}</h2>
-                        <p class="article-summary">${article.summary}</p>
-                        <span class="read-more">Read Full Article <i class="fas fa-arrow-right"></i></span>
-                    </a>
-                `;
-            });
+            container.innerHTML = `
+                <div class="glass-card empty-state">
+                    <i class="fas fa-search"></i>
+                    <p>No articles match your search.</p>
+                    <button type="button" class="btn btn-outline btn-sm" data-action="clear">Clear search and filters</button>
+                </div>`;
+            return;
         }
-        
-        container.innerHTML = html;
-        
-        // Stagger reveal trigger
-        setTimeout(() => {
-            const elements = container.querySelectorAll('.reveal');
-            elements.forEach(el => el.classList.add('active'));
-        }, 50);
+
+        container.innerHTML = articles
+            .map((article, index) => this.renderCard(article, { terms, delay: Math.min(index, 10) * 0.05 }))
+            .join('');
     },
 
-    /**
-     * Apply active search and category filters
-     */
-    applyFilters: function () {
-        const query = this.state.searchQuery.toLowerCase().trim();
-        const category = this.state.currentCategory;
-        
-        const filtered = this.state.articles.filter(article => {
-            // Category check
-            const matchesCat = this.matchesCategory(article, category);
-            
-            // Search query check
-            const title = (article.title || '').toLowerCase();
-            const summary = (article.summary || '').toLowerCase();
-            const matchesSearch = query === '' || title.includes(query) || summary.includes(query);
-            
-            return matchesCat && matchesSearch;
+    renderFilters: function (matchedByQuery) {
+        const container = document.getElementById('category-filters');
+        if (!container) return;
+        const counts = { all: matchedByQuery.length };
+        this.state.tags.forEach((t) => { counts[t.id] = 0; });
+        matchedByQuery.forEach(({ article }) => {
+            (article.tags || []).forEach((t) => { if (t in counts) counts[t] += 1; });
         });
-        
-        this.renderArticleList(filtered);
+
+        const chip = (id, label) => {
+            const active = this.state.tag === id;
+            const disabled = !active && counts[id] === 0;
+            return `<button type="button" class="filter-btn${active ? ' active' : ''}" data-tag="${id}" aria-pressed="${active}"${disabled ? ' disabled' : ''}>`
+                + `${this.escapeHtml(label)} <span class="filter-count">${counts[id]}</span></button>`;
+        };
+
+        // Re-rendering replaces the buttons, so keep keyboard focus on the same chip
+        const focusedTag = document.activeElement && container.contains(document.activeElement)
+            ? document.activeElement.dataset.tag
+            : null;
+        container.innerHTML = chip('all', 'All Insights') + this.state.tags.map((t) => chip(t.id, t.label)).join('');
+        if (focusedTag) {
+            const again = container.querySelector(`[data-tag="${focusedTag}"]`);
+            if (again) again.focus({ preventScroll: true });
+        }
+
+        // On phones the chips are one scrollable row; keep the active one in view
+        const active = container.querySelector('.filter-btn.active');
+        if (active && container.scrollWidth > container.clientWidth) {
+            const row = container.getBoundingClientRect();
+            const box = active.getBoundingClientRect();
+            if (box.left < row.left || box.right > row.right) {
+                container.scrollLeft += box.left - row.left - 24;
+            }
+        }
     },
 
-    /**
-     * Setup event listeners for the search and category filters
-     */
+    renderStatus: function (count) {
+        const status = document.getElementById('search-status');
+        const clear = document.getElementById('clear-search');
+        if (!status) return;
+        const total = this.state.articles.length;
+        const query = this.state.query.trim();
+        const filtered = query || this.state.tag !== 'all';
+        const noun = (n) => (n === 1 ? 'article' : 'articles');
+
+        let text = `${total} ${noun(total)}`;
+        if (filtered) {
+            text = `${count} of ${total} ${noun(total)}`;
+            if (query) text += ` matching “${query}”`;
+            if (this.state.tag !== 'all') text += ` in ${this.tagLabel(this.state.tag)}`;
+        }
+        status.textContent = text;
+        if (clear) clear.hidden = !filtered;
+    },
+
+    applyFilters: function ({ settle = true } = {}) {
+        const terms = this.queryTerms(this.state.query);
+        const matched = [];
+        for (const article of this.state.articles) {
+            const score = terms.length ? this.scoreArticle(article, terms) : 0;
+            if (score !== null) matched.push({ article, score });
+        }
+        const visible = matched.filter(({ article }) =>
+            this.state.tag === 'all' || (article.tags || []).includes(this.state.tag)
+        );
+        if (terms.length) {
+            visible.sort((a, b) => b.score - a.score || b.article.date.localeCompare(a.article.date));
+        }
+
+        this.renderFilters(matched);
+        this.renderArticleList(visible.map((m) => m.article), terms);
+        this.renderStatus(visible.length);
+        if (settle) this.scheduleSettle();
+    },
+
+    // ------------------------------------------------------------ URL + analytics
+
+    readUrlState: function () {
+        const params = new URLSearchParams(window.location.search);
+        this.state.query = params.get('q') || '';
+        const tag = params.get('tag');
+        this.state.tag = tag && this.state.tags.some((t) => t.id === tag) ? tag : 'all';
+    },
+
+    writeUrlState: function () {
+        const params = new URLSearchParams(window.location.search);
+        const query = this.state.query.trim();
+        if (query) params.set('q', query); else params.delete('q');
+        if (this.state.tag !== 'all') params.set('tag', this.state.tag); else params.delete('tag');
+        const search = params.toString();
+        const url = window.location.pathname + (search ? `?${search}` : '') + window.location.hash;
+        if (url !== window.location.pathname + window.location.search + window.location.hash) {
+            window.history.replaceState(null, '', url);
+        }
+    },
+
+    trackSearch: function () {
+        const query = this.state.query.trim().toLowerCase();
+        if (!query || query === this.state.lastTrackedQuery) return;
+        this.state.lastTrackedQuery = query;
+        if (typeof gtag === 'function') {
+            gtag('event', 'search', { search_term: query });
+        }
+    },
+
+    /** Runs once typing pauses (or immediately), so URL and analytics see settled queries only. */
+    scheduleSettle: function (immediate = false) {
+        clearTimeout(this.state.settleTimer);
+        const settle = () => {
+            this.writeUrlState();
+            this.trackSearch();
+        };
+        if (immediate) settle();
+        else this.state.settleTimer = setTimeout(settle, this.config.settleDelayMs);
+    },
+
+    // ------------------------------------------------------------ wiring
+
     setupSearchAndFilter: function () {
-        const searchInput = document.getElementById('article-search');
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                this.state.searchQuery = e.target.value;
+        const input = document.getElementById('article-search');
+        const filters = document.getElementById('category-filters');
+        const container = document.getElementById('articles-container');
+        const clearButton = document.getElementById('clear-search');
+
+        const clearAll = () => {
+            this.state.query = '';
+            this.state.tag = 'all';
+            if (input) input.value = '';
+            this.applyFilters({ settle: false });
+            this.scheduleSettle(true);
+            if (input) input.focus();
+        };
+
+        if (input) {
+            input.value = this.state.query;
+            // Start fetching the full-text index as soon as a reader shows intent
+            input.addEventListener('focus', () => this.loadSearchIndex(), { once: true });
+            input.addEventListener('input', (e) => {
+                this.state.query = e.target.value;
+                if (this.state.query.trim()) this.loadSearchIndex();
                 this.applyFilters();
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && input.value) {
+                    input.value = '';
+                    this.state.query = '';
+                    this.applyFilters({ settle: false });
+                    this.scheduleSettle(true);
+                }
+            });
+            // "/" focuses search from anywhere on the page
+            document.addEventListener('keydown', (e) => {
+                const target = e.target;
+                const typing = target instanceof HTMLElement
+                    && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName));
+                if (e.key === '/' && !typing && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                    e.preventDefault();
+                    input.focus();
+                }
             });
         }
-        
-        filterButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                // Update active button styling
-                filterButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                // Update category and apply filters
-                this.state.currentCategory = btn.getAttribute('data-category');
-                this.applyFilters();
+
+        if (filters) {
+            filters.addEventListener('click', (e) => {
+                const button = e.target.closest('.filter-btn');
+                if (!button || button.disabled) return;
+                this.state.tag = button.dataset.tag;
+                this.applyFilters({ settle: false });
+                this.scheduleSettle(true);
             });
-        });
+        }
+
+        if (clearButton) clearButton.addEventListener('click', clearAll);
+        if (container) {
+            container.addEventListener('click', (e) => {
+                if (e.target.closest('[data-action="clear"]')) clearAll();
+            });
+        }
+
+        // Don't lose a just-typed query if the reader opens an article before typing settles
+        window.addEventListener('pagehide', () => this.scheduleSettle(true));
     },
 
     /**
@@ -174,34 +407,20 @@ const ArticleLoader = {
     loadArticleList: async function () {
         const container = document.getElementById('articles-container');
         const loading = document.getElementById('loading-indicator');
-
         if (!container || !loading) return;
 
         try {
-            // Fetch articles index
-            const response = await fetch(this.config.articlesIndexPath);
+            const [articles] = await Promise.all([
+                this.fetchJson(this.config.articlesIndexPath),
+                this.loadTags()
+            ]);
+            this.state.articles = this.newestFirst(articles);
+            this.readUrlState();
 
-            if (!response.ok) {
-                throw new Error('Could not load articles index');
-            }
-
-            const articles = await response.json();
-
-            // Sort by date (newest first)
-            articles.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            // Save to state for clientside filtering
-            this.state.articles = articles;
-
-            // Hide loading
             loading.style.display = 'none';
-            
-            // Render first load
-            this.renderArticleList(articles);
-            
-            // Setup listeners
             this.setupSearchAndFilter();
-
+            if (this.state.query.trim()) this.loadSearchIndex();
+            this.applyFilters({ settle: false });
         } catch (error) {
             console.error('Error loading articles:', error);
             loading.innerHTML = '<p style="color: #ff6b6b;"><i class="fas fa-exclamation-circle"></i> Error loading articles. Please try again later.</p>';
@@ -216,36 +435,21 @@ const ArticleLoader = {
         if (!container) return;
 
         try {
-            const response = await fetch(this.config.articlesIndexPath);
-            if (!response.ok) throw new Error('Could not load articles index');
+            const [articles] = await Promise.all([
+                this.fetchJson(this.config.articlesIndexPath),
+                this.loadTags()
+            ]);
+            const featured = this.newestFirst(articles).slice(0, 4);
 
-            const articles = await response.json();
-            articles.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            // Select top 4 showcase articles
-            const featured = articles.slice(0, 4);
-
-            let html = '';
-            featured.forEach((article, index) => {
-                const delay = index * 0.1;
-                html += `
-                    <a href="articles/${article.id}.html" class="article-card glass-card reveal" style="transition-delay: ${delay}s">
-                        <div class="article-date">
-                            <i class="far fa-calendar-alt"></i> ${this.formatDate(article.date)}
-                            <span style="margin-left: 10px;"><i class="far fa-clock"></i> ${article.readTime || '5 min'} read</span>
-                        </div>
-                        <h3 class="article-title">${article.title}</h3>
-                        <p class="article-summary">${article.summary}</p>
-                        <span class="read-more">Read Architectural Case Study <i class="fas fa-arrow-right"></i></span>
-                    </a>
-                `;
-            });
-
-            container.innerHTML = html;
+            container.innerHTML = featured.map((article, index) => this.renderCard(article, {
+                headingTag: 'h3',
+                ctaLabel: (article.tags || []).includes('case-study') ? 'Read Architectural Case Study' : 'Read Full Article',
+                delay: index * 0.1,
+                revealed: false
+            })).join('');
 
             setTimeout(() => {
-                const elements = container.querySelectorAll('.reveal');
-                elements.forEach(el => el.classList.add('active'));
+                container.querySelectorAll('.reveal').forEach((el) => el.classList.add('active'));
             }, 100);
         } catch (error) {
             console.error('Error loading featured articles:', error);

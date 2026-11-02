@@ -96,18 +96,20 @@
 
         <div class="container">
             <!-- Search & Filter Controls -->
-            <div class="search-filter-container glass-card reveal" style="margin-bottom: var(--spacing-md); transition-delay: 0.05s;">
+            <div class="search-filter-container glass-card reveal" role="search" style="margin-bottom: var(--spacing-md); transition-delay: 0.05s;">
                 <div class="search-box">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="article-search" placeholder="Search insights by title, summary, or keywords..." aria-label="Search articles">
+                    <i class="fas fa-search search-icon" aria-hidden="true"></i>
+                    <input type="text" id="article-search" placeholder="Search titles, summaries and full article text…"
+                        aria-label="Search articles" aria-keyshortcuts="/" autocomplete="off" spellcheck="false" enterkeyhint="search">
+                    <kbd class="search-shortcut" aria-hidden="true">/</kbd>
                 </div>
-                <div class="category-filters" id="category-filters">
-                    <button class="filter-btn active" data-category="all">All Insights</button>
-                    <button class="filter-btn" data-category="agents">AI Agents</button>
-                    <button class="filter-btn" data-category="safety">Safety & Runtimes</button>
-                    <button class="filter-btn" data-category="geospatial">Geospatial / GIS</button>
-                    <button class="filter-btn" data-category="product">Product & Data</button>
-                </div>
+                <!-- Topic chips are rendered from articles/tags.json -->
+                <div class="category-filters" id="category-filters" role="group" aria-label="Filter by topic"></div>
+            </div>
+
+            <div class="search-status">
+                <span id="search-status" aria-live="polite"></span>
+                <button type="button" id="clear-search" class="clear-search" hidden>Clear filters</button>
             </div>
 
             <div id="loading-indicator">

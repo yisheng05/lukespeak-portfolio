@@ -14,8 +14,38 @@ const ArticleLoader = {
      * Format a date string into a nice readable format
      */
     formatDate: function (dateString) {
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        // "YYYY-MM-DD" parses as UTC midnight, so format in UTC too; otherwise
+        // readers west of UTC (e.g. the Americas) see the previous day.
+        const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
         return new Date(dateString).toLocaleDateString(undefined, options);
+    },
+
+    /**
+     * marked extension that passes LaTeX through untouched for MathJax.
+     * Without it, marked treats "\(" and "\[" as escaped punctuation and strips
+     * the backslash, so inline math like \(H\) renders as the literal "(H)".
+     */
+    mathExtension: {
+        extensions: [{
+            name: 'math',
+            level: 'inline',
+            start(src) {
+                const i = src.search(/\\\(|\\\[|\$\$/);
+                return i === -1 ? undefined : i;
+            },
+            tokenizer(src) {
+                const match = /^(?:\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\]|\$\$[\s\S]+?\$\$)/.exec(src);
+                if (match) {
+                    return { type: 'math', raw: match[0], text: match[0] };
+                }
+            },
+            renderer(token) {
+                return token.text
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+            }
+        }]
     },
 
     // In-memory state for filtering
@@ -261,6 +291,7 @@ const ArticleLoader = {
                 gfm: true, // GitHub Flavored Markdown
                 breaks: true
             });
+            marked.use(this.mathExtension);
 
             // Strip leading # H1 heading if present — the hero section already
             // shows the title via <h1 id="article-title">, so rendering it again
